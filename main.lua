@@ -12,7 +12,8 @@ function love.load()
 	screenScale = 2
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
-	player = Player.new(player_sprite_head, 0, 0, 1)
+	player_sprite_body = love.graphics.newImage("assets/player_body.png")
+	player = Player.new(player_sprite_head, player_sprite_body, 0, 0, 1)
 end
 
 
@@ -21,7 +22,7 @@ function love.draw()
 
 	love.graphics.scale(screenScale, screenScale)
 	love.graphics.translate(screenW / screenScale, screenH / screenScale)
-	love.graphics.rectangle("fill", 0, 0, 50, 50)
+	love.graphics.rectangle("fill", 0, 0, 1, 1)
 	player:draw()
 	love.graphics.pop()
 end
@@ -32,7 +33,9 @@ function love.update(dt)
 end
 
 function love.keypressed(key, scancode, isrepeat)
-
+	if love.keyboard.isDown("r") then
+		love.load()
+	end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
