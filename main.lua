@@ -9,7 +9,7 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest")
 	screenW = love.graphics.getWidth() / 2
 	screenH = love.graphics.getHeight() / 2
-	screenScale = 2
+	screenScale = 1
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body.png")
@@ -36,6 +36,11 @@ function love.keypressed(key, scancode, isrepeat)
 	if love.keyboard.isDown("r") then
 		love.load()
 	end
+
+	if love.keyboard.isDown("escape") then
+		love.event.quit()
+	end
+	
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
