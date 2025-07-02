@@ -26,16 +26,8 @@ function Item:draw()
 end
 
 function Item:checkCollision(u, v, a, b)
-	if (u + a / 2 >= (self.x - self.w / 2)) and 
-		(u - a / 2 <= (self.x + self.w / 2)) and 
-		(v + b / 2 >= (self.y - self.h / 2)) and 
-		(v - b / 2 <= (self.y + self.h / 2)) then
-		return true
-	else
-		return false
-	end
+	return checkBBoxCollision(u, v, a, b, self.x - self.ox, self.y - self.oy, self.w, self.h)
 end
-
 
 ----
 
@@ -47,4 +39,47 @@ function spawnItem(player_pos)
 	
 	player_sprite_body = love.graphics.newImage("assets/player_body.png")
 	return Item.new(player_sprite_body, x, y, 1, 0)
+end
+
+function checkBBoxCollision(u, v, a, b, x, y, w, h)
+	if (u + a / 2 >= (x - w / 2)) and 
+		(u - a / 2 <= (x + w / 2)) and 
+		(v + b / 2 >= (y - h / 2)) and 
+		(v - b / 2 <= (y + h / 2)) then
+		return true
+	else
+		return false
+	end
+end
+
+function checkBBoxCollision2(bbox1, bbox2)
+	u, v, a, b = unpack(bbox1)
+	x, y, w, h = unpack(bbox2)
+	if (u + a / 2 >= (x - w / 2)) and 
+		(u - a / 2 <= (x + w / 2)) and 
+		(v + b / 2 >= (y - h / 2)) and 
+		(v - b / 2 <= (y + h / 2)) then
+		return true
+	else
+		return false
+	end
+end
+
+function checkBBoxCollisionCircle(bbox1, bbox2)
+	u, v, r1 = unpack(bbox1)
+	x, y, r2 = unpack(bbox2)
+	dist = math.sqrt((x-u)^2 + (y-v)^2)
+	if dist <= r1 + r2 then
+		return true
+	else
+		return false
+	end
+end
+
+function drawBBox(mode, bbox)
+	if mode == "circle" then
+		love.graphics.circle("line", unpack(bbox))
+	else
+		love.graphics.rectangle("line", unpack(bbox))
+	end
 end

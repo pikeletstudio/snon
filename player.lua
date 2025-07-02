@@ -16,25 +16,36 @@ function Player.new(head_sprite, body_sprite, x, y, scale)
 	instance.body_sprite = body_sprite
 	instance.length = #instance.segments
 	instance.spacing = 15
-	instance.sepTime = 0
-	instance.accumTime = 0
 
-	instance.speed = 700 + 1.5 * instance.length
-	instance.turn_speed = instance.speed * 0.05
-
+	instance.base_speed = 700
 	instance.moving = true
 
 	return instance
 end
 
-function Player:getBBox()
-	return self.x, self.y, self.segments[1].w, self.segments[1].h
+function Player:getSpeed()
+	return math.min(self.base_speed + 3 * self.length, self.base_speed * 1.4)
+end
+
+function Player:getTurnSpeed()
+	return self:getSpeed() * 0.05
+end
+
+function Player:getBBox(mode)
+	return self.segments[1]:getBBox(mode)
+end
+
+function Player:checkBounds(x, y)
+	maxX, maxY = SCREEN_TRANSFORM:inverseTransformPoint(screenW * 2, screenH * 2)
+	minX, minY = SCREEN_TRANSFORM:inverseTransformPoint(0, 0)
+	boundedX = math.max(math.min(x, maxX), minX)
+	boundedY = math.max(math.min(y, maxY), minY)
+	return boundedX, boundedY
 end
 
 function Player:grow(length)
-	print("growing")
 	self.length = self.length + length
-	self.accumTime = 0
+	self.accum_time = 0
 end
 
 function Player:addBodySegments(num_segments)
@@ -43,8 +54,6 @@ function Player:addBodySegments(num_segments)
 		prev = self.segments[n - 1]
 		x = prev.x - prev.w
 		y = prev.y
-		-- prev_last_node = prev.path[#prev.path]
-		-- prev.path = {prev_last_node}
 		prev:clearPath(self.spacing)
 		table.insert(self.segments, Segment.new(self.body_sprite, x, y, self.scale))
 	end
@@ -53,6 +62,7 @@ end
 function Player:draw()
 	for n, seg in pairs(self.segments) do
 		seg:draw()
+		-- drawBBox("circle", {seg:getBBox("circle")})
 	end
 end
 
@@ -70,11 +80,6 @@ function Player:update(dt)
 	end
 	if not (#self.segments >= self.length) then
 		self:addBodySegments(1)
-		-- self.accumTime = self.accumTime + dt
-		-- if (self.accumTime >= self.sepTime) then
-		-- 	self:addBodySegments(1)
-		-- 	self.accumTime = 0
-		-- end
 	end
 end
 
@@ -86,17 +91,24 @@ function Player:takeInput(dt)
 	if love.keyboard.isDown("d") then
 		self:turn(dt, 1)
 	end
+
+	if love.keyboard.isDown("lshift") then
+		self.base_speed = 700 * 1.4
+	elseif love.keyboard.isDown("space") then
+		self.base_speed = 700 * 0.65
+	else
+		self.base_speed = 700
+	end
 end
 
 function Player:turn(dt, dir)
-	self.rot = self.rot + self.turn_speed * dt * dir
+	self.rot = self.rot + self:getTurnSpeed() * dt * dir
 end
 
 function Player:move(dt)
-	self.vx = self.speed * math.cos(self.rot) * dt
-	self.vy = self.speed * math.sin(self.rot) * dt
-	self.x = self.x + self.vx
-	self.y = self.y + self.vy
+	self.vx = self:getSpeed() * math.cos(self.rot) * dt
+	self.vy = self:getSpeed() * math.sin(self.rot) * dt
+	self.x, self.y = self:checkBounds(self.x + self.vx, self.y + self.vy)
 end
 
 function Player:updateBodyPath(dt)
@@ -109,6 +121,20 @@ function Player:updateBodyPath(dt)
 		prev_seg = self.segments[s - 1]
 		prev_step = table.remove(prev_seg.path, 1)
 		seg:update(prev_step.x, prev_step.y, prev_step.rot)
+
+		-- eat the tail if touched by the head
+		-- update collision function to account for rotation
+		-- if s > 2 and checkBBoxCollision2({seg:getBBox()}, {self:getBBox()}) then
+		if s > 2 and checkBBoxCollisionCircle({seg:getBBox("circle")}, {self:getBBox("circle")}) then
+			new_segs = {}
+			for n = 1, s - 1 do
+				table.insert(new_segs, self.segments[n])
+			end
+			self.segments = new_segs
+			self.length = #self.segments
+			break
+		end
+
 	end
 
 end
@@ -185,6 +211,12 @@ function Segment.new(sprite, x, y, scale)
 	return instance
 end
 
+function Segment:getBBox(mode)
+	if mode == "circle" then
+		return self.x, self.y, math.max(self.w, self.h) / 2
+	end
+	return self.x - self.ox, self.y - self.oy, self.w, self.h
+end
 
 function Segment:draw()
 	love.graphics.draw(self.sprite, 
