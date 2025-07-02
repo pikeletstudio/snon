@@ -12,7 +12,7 @@ function Player.new(head_sprite, body_sprite, x, y, scale)
 	instance.rot = 0
 	instance.scale = scale
 
-	instance.segments = {Segment.new(head_sprite, x, y, scale)}
+	instance.segments = {TransportCell.new(head_sprite, x, y, scale)}
 	instance.body_sprite = body_sprite
 	instance.length = #instance.segments
 	instance.spacing = 15
@@ -55,7 +55,7 @@ function Player:addBodySegments(num_segments)
 		x = prev.x - prev.w
 		y = prev.y
 		prev:clearPath(self.spacing)
-		table.insert(self.segments, Segment.new(self.body_sprite, x, y, self.scale))
+		table.insert(self.segments, TransportCell.new(self.body_sprite, x, y, self.scale))
 	end
 end
 
@@ -76,7 +76,6 @@ function Player:update(dt)
 
 	if self.moving then
 		self:updateBodyPath()
-		-- self:updateBodyDirect()
 	end
 	if not (#self.segments >= self.length) then
 		self:addBodySegments(1)
@@ -90,6 +89,10 @@ function Player:takeInput(dt)
 
 	if love.keyboard.isDown("d") then
 		self:turn(dt, 1)
+	end
+
+	if love.keyboard.isDown("w") then
+		self.segments[1]:test()
 	end
 
 	if love.keyboard.isDown("lshift") then
@@ -124,8 +127,8 @@ function Player:updateBodyPath(dt)
 
 		-- eat the tail if touched by the head
 		-- update collision function to account for rotation
-		-- if s > 2 and checkBBoxCollision2({seg:getBBox()}, {self:getBBox()}) then
-		if s > 2 and checkBBoxCollisionCircle({seg:getBBox("circle")}, {self:getBBox("circle")}) then
+		-- if s > 2 and checkBBoxCollision2(seg:getBBox(), self:getBBox()) then
+		if s > 2 and checkBBoxCollisionCircle(seg:getBBox("circle"), self:getBBox("circle")) then
 			new_segs = {}
 			for n = 1, s - 1 do
 				table.insert(new_segs, self.segments[n])
@@ -186,6 +189,9 @@ function Player:updateBodyDirect()
 end
 
 
+---------------------
+
+
 Segment = {}
 Segment.__index = Segment
 
@@ -213,9 +219,9 @@ end
 
 function Segment:getBBox(mode)
 	if mode == "circle" then
-		return self.x, self.y, math.max(self.w, self.h) / 2
+		return {self.x, self.y, math.max(self.w, self.h) / 2}
 	end
-	return self.x - self.ox, self.y - self.oy, self.w, self.h
+	return {self.x - self.ox, self.y - self.oy, self.w, self.h}
 end
 
 function Segment:draw()
@@ -246,6 +252,28 @@ function Segment:clearPath(keep)
 	-- save current position to path
 	table.insert(self.path, PathNode.new(self.x, self.y, self.rot))
 end
+
+
+---------------------
+
+
+TransportCell = {}
+TransportCell.__index = TransportCell
+setmetatable(TransportCell, Segment)
+
+function TransportCell.new(sprite, x, y, scale)
+	local instance = Segment.new(sprite, x, y, scale)
+	setmetatable(instance, TransportCell)
+	return instance
+end
+
+function TransportCell:test()
+	print("worked")
+end
+
+
+---------------------
+
 
 PathNode = {}
 PathNode.__index = PathNode

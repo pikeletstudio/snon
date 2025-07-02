@@ -9,7 +9,7 @@ function love.load()
 	screenScale = 2
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
-	player_sprite_body = love.graphics.newImage("assets/player_body.png")
+	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
 	player = Player.new(player_sprite_head, player_sprite_body, 0, 0, 1)
 
 	SCREEN_TRANSFORM = love.math.newTransform()
@@ -32,7 +32,7 @@ function love.draw()
 
 	love.graphics.rectangle("fill", 0, 0, 1, 1)
 	player:draw()
-	for i, item in pairs(items) do item:draw() end
+	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
 
 
 	love.graphics.pop()

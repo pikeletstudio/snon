@@ -25,8 +25,16 @@ function Item:draw()
 						self.ox, self.oy)
 end
 
-function Item:checkCollision(u, v, a, b)
-	return checkBBoxCollision(u, v, a, b, self.x - self.ox, self.y - self.oy, self.w, self.h)
+function Item:getBBox(mode)
+	if mode == "circle" then
+		return {self.x, self.y, math.max(self.w, self.h) / 2}
+	end
+	return {self.x - self.ox, self.y - self.oy, self.w, self.h}
+end
+
+
+function Item:checkCollision(bbox)
+	return checkBBoxCollision2(bbox, self:getBBox(mode))
 end
 
 ----
@@ -37,8 +45,8 @@ function spawnItem(player_pos)
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	end
 	
-	player_sprite_body = love.graphics.newImage("assets/player_body.png")
-	return Item.new(player_sprite_body, x, y, 1, 0)
+	player_sprite_body = love.graphics.newImage("assets/pickup_blue.png")
+	return Item.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi))
 end
 
 function checkBBoxCollision(u, v, a, b, x, y, w, h)
