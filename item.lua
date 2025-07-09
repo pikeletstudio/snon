@@ -1,8 +1,14 @@
 Item = {}
 Item.__index = Item
 
+ItemColours = {
+	RED = {1, 0.8, 0.8, 1},
+	GREEN = {0.8, 1, 0.8, 1},
+	BLUE = {0.8, 0.8, 1, 1}
+}
+
 function Item.new(sprite, x, y, scale, rot)
-	local instance = setmetatable({}, Item) 
+	local instance = setmetatable({}, Item)
 	instance.x = x
 	instance.y = y
 	instance.rot = rot
@@ -10,6 +16,8 @@ function Item.new(sprite, x, y, scale, rot)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
+	instance.type = getKeys(ItemColours)[math.random(#getKeys(ItemColours))]
+	instance.colour = ItemColours[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -18,11 +26,13 @@ function Item.new(sprite, x, y, scale, rot)
 end
 
 function Item:draw()
+	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
 						self.x, -- love draws from the top left corner
 						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
 						self.rot, self.scale, self.scale,
 						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Item:getBBox(mode)
@@ -39,14 +49,23 @@ end
 
 ----
 
+function getKeys(t)
+	keys = {}
+	for k, v in pairs(t) do
+		table.insert(keys, k)
+	end
+	return keys
+end
+
+
 function spawnItem(player_pos)
 	if not player_pos then
 		u, v = math.random(0, screenW * 2), math.random(0, screenH * 2)
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	end
 	
-	player_sprite_body = love.graphics.newImage("assets/pickup_blue.png")
-	return Item.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi))
+	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
+	return Item.new(item_sprite, x, y, 1, math.random(-math.pi, math.pi))
 end
 
 function checkBBoxCollision(u, v, a, b, x, y, w, h)

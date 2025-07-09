@@ -3,7 +3,7 @@ Player = {}
 Player.__index = Player
 
 
-function Player.new(head_sprite, body_sprite, x, y, scale)
+function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	local instance = setmetatable({}, Player) 
 	instance.x = x
 	instance.y = y
@@ -15,16 +15,19 @@ function Player.new(head_sprite, body_sprite, x, y, scale)
 	instance.segments = {TransportCell.new(head_sprite, x, y, scale)}
 	instance.body_sprite = body_sprite
 	instance.length = #instance.segments
-	instance.spacing = 15
+	instance.last_filled = 1
+	instance.spacing = 5
+	instance.fixed_tick = fixed_tick
 
-	instance.base_speed = 700
+	instance.base_speed = 1.5 / fixed_tick
+	instance.speed_mod = 0
 	instance.moving = true
 
 	return instance
 end
 
 function Player:getSpeed()
-	return math.min(self.base_speed + 3 * self.length, self.base_speed * 1.4)
+	return math.min(self.base_speed + 3 * self.length + self.speed_mod, self.base_speed * 1.4 + self.speed_mod)
 end
 
 function Player:getTurnSpeed()
@@ -59,10 +62,23 @@ function Player:addBodySegments(num_segments)
 	end
 end
 
+function Player:fillSegment(seg, item_colour)
+	seg.colour = item_colour
+end
+
+function Player:collect(item_colour)
+	-- if no empty cells, return
+	if #self.segments <= self.last_filled then return false end
+	self.last_filled = self.last_filled + 1
+	self:fillSegment(self.segments[self.last_filled], item_colour)
+	return true
+end
+
+
 function Player:draw()
 	for n, seg in pairs(self.segments) do
 		seg:draw()
-		-- drawBBox("circle", {seg:getBBox("circle")})
+		-- drawBBox("circle", seg:getBBox("circle"))
 	end
 end
 
@@ -96,11 +112,11 @@ function Player:takeInput(dt)
 	end
 
 	if love.keyboard.isDown("lshift") then
-		self.base_speed = 700 * 1.4
+		self.speed_mod = self.base_speed * 0.4
 	elseif love.keyboard.isDown("space") then
-		self.base_speed = 700 * 0.65
+		self.speed_mod = - self.base_speed * 0.35
 	else
-		self.base_speed = 700
+		self.speed_mod = 0
 	end
 end
 
@@ -117,6 +133,8 @@ end
 function Player:updateBodyPath(dt)
 	-- update head first
 	self.segments[1]:update(self.x, self.y, self.rot)
+
+	self.last_filled = math.min(self.last_filled, #self.segments)
 
 	-- pass path along body
 	for s = 2, #self.segments do
@@ -204,6 +222,7 @@ function Segment.new(sprite, x, y, scale)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
+	instance.colour = {1, 1, 1, 1}
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -225,11 +244,13 @@ function Segment:getBBox(mode)
 end
 
 function Segment:draw()
+	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
 						self.x, -- love draws from the top left corner
 						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
 						self.rot, self.scale, self.scale,
 						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Segment:update(x, y, rot)
