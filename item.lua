@@ -1,10 +1,11 @@
 Item = {}
 Item.__index = Item
 
-ItemColours = {
+ItemTypes = {
 	RED = {1, 0.8, 0.8, 1},
 	GREEN = {0.8, 1, 0.8, 1},
-	BLUE = {0.8, 0.8, 1, 1}
+	BLUE = {0.8, 0.8, 1, 1},
+	EMPTY = {1, 1, 1, 1}
 }
 
 function Item.new(sprite, x, y, scale, rot)
@@ -16,8 +17,8 @@ function Item.new(sprite, x, y, scale, rot)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
-	instance.type = getKeys(ItemColours)[math.random(#getKeys(ItemColours))]
-	instance.colour = ItemColours[instance.type]
+	instance.type = getKeys(ItemTypes)[math.random(#getKeys(ItemTypes))]
+	instance.colour = ItemTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -49,10 +50,12 @@ end
 
 ----
 
-function getKeys(t)
+function getKeys(t, exclude)
 	keys = {}
 	for k, v in pairs(t) do
-		table.insert(keys, k)
+		if k ~= exclude then
+			table.insert(keys, k)
+		end
 	end
 	return keys
 end

@@ -11,13 +11,14 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = type
-	instance.colour = ItemColours[instance.type]
-	print(instance.colour)
+	instance.colour = ItemTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
 
 	instance.pickup_radius = instance.w / 2 * 5
+	instance.ready = true
+	instance.readyTimer = 0
 	
 	return instance
 end
@@ -39,7 +40,7 @@ function DropPoint:getBBox(mode)
 	return {self.x - self.ox, self.y - self.oy, self.w, self.h}
 end
 
-function DropPoint:getPickupBBox(mode)
+function DropPoint:getDespositBBox(mode)
 	return {self.x, self.y, self.pickup_radius}
 end
 
@@ -47,16 +48,24 @@ function DropPoint:checkCollision(bbox)
 	return checkBBoxCollision2(bbox, self:getBBox(mode))
 end
 
-function DropPoint:checkPickup(bbox)
-	return checkBBoxCollisionCircle(bbox, self:getPickupBBox(mode))
+function DropPoint:checkDesposit(bbox)
+	return checkBBoxCollisionCircle(bbox, self:getDespositBBox(mode))
+end
+
+function DropPoint:deposit(cell)
+	if not cell then return false end
+	if self.type ~= cell.type then return false end
+	self.colour = {1, 1, 1, 1}
+	self.ready = false
+	return true
 end
 
 ----
 
-function spawnDropPoint(type)
+function spawnDropPoint(item_type)
 	u, v = math.random(0, screenW * 2), math.random(0, screenH * 2)
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	
-	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
-	return DropPoint.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), type)
+	player_sprite_body = love.graphics.newImage("assets/droppoint_empty.png")
+	return DropPoint.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end

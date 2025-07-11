@@ -4,6 +4,11 @@ require("station")
 
 
 function love.load()
+	s = 2
+	for i = 1, 5 do
+		print((i - s) % 5)
+	end
+
 	math.randomseed(os.time())
 
 	love.graphics.setDefaultFilter("nearest")
@@ -33,7 +38,7 @@ function love.load()
 
 	drop_points = {}
 	for type = 1, 3 do
-		table.insert(drop_points, spawnDropPoint(getKeys(ItemColours)[type]))
+		table.insert(drop_points, spawnDropPoint(getKeys(ItemTypes, "EMPTY")[type]))
 	end
 end
 
@@ -72,7 +77,7 @@ function love.update(dt)
 	for i, item in pairs(items) do 
 		if item:checkCollision(player:getBBox()) then
 			-- player:grow(1)
-			collected = player:collect(item.colour)
+			collected = player:collect(item.type)
 			if collected then table.remove(items, i) end
 
 		end
@@ -80,10 +85,16 @@ function love.update(dt)
 
 	-- player collision with drop point pickup radius
 	for i, dp in pairs(drop_points) do 
-		if dp:checkPickup(player:getBBox("circle")) then
-
-			player:grow(1)
-
+		if dp.ready and dp:checkDesposit(player:getBBox("circle")) then
+			seg = player:getFirstFilled()
+			if dp:deposit() then
+				SCORE = SCORE + 1
+				print("here")
+				player:emptySegment(seg)
+				player.last_filled = player.last_filled - 1
+				player:cycleCells(1)
+				-- player:grow(1)
+			end
 		end
 	end
 

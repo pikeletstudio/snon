@@ -12,7 +12,7 @@ function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	instance.rot = 0
 	instance.scale = scale
 
-	instance.segments = {TransportCell.new(head_sprite, x, y, scale)}
+	instance.segments = {Segment.new(head_sprite, x, y, scale)}
 	instance.body_sprite = body_sprite
 	instance.length = #instance.segments
 	instance.last_filled = 1
@@ -62,18 +62,61 @@ function Player:addBodySegments(num_segments)
 	end
 end
 
-function Player:fillSegment(seg, item_colour)
-	seg.colour = item_colour
+function Player:fillSegment(seg, item_type)
+	seg.type = item_type
 end
 
-function Player:collect(item_colour)
+function Player:emptySegment(seg)
+	Player:fillSegment(seg, "EMPTY")
+end
+
+function Player:collect(item_type)
 	-- if no empty cells, return
 	if #self.segments <= self.last_filled then return false end
 	self.last_filled = self.last_filled + 1
-	self:fillSegment(self.segments[self.last_filled], item_colour)
+	self:fillSegment(self.segments[self.last_filled], item_type)
 	return true
 end
 
+function Player:getFirstFilled()
+	if self.last_filled > 1 then
+		return self.segments[2]
+	end
+	return nil -- just to be clear
+end
+
+function Player:cycleCells(steps)
+	-- new_types = {}
+	-- for n, cell in pairs(self.segments) do
+	-- 	if (n-steps) then sign = 0 else sign = (n-steps) / math.abs((n-steps)) end
+	-- 	N = #self.segments * ((sign + 1) / 2)
+	-- 	print(N)
+	-- 	pos = math.abs(N - math.abs(n-steps) )
+	-- 	print(pos)
+	-- 	table.insert(new_types, pos, cell.type)
+	-- end
+	-- for n, cell in pairs(self.segments) do
+	-- 	cell.type = new_types[n]
+	-- 	print(new_types[n])
+	-- 	cell.colour = ItemTypes[cell.type]
+	-- end
+	t_cells = {}
+	for n, cell in pairs(self.segments) do
+		if cell.__index == TransportCell then
+			table.insert(t_cells, {n, cell.type})
+		end
+	end
+	for i = 1, #t_cells do
+		cell = self.segments[t_cells[i][1]]
+		new_pos = (i - steps) % #t_cells
+		if new_pos == 0 then new_pos = #t_cells end
+		new_type = t_cells[new_pos][2]
+		print(i..": "..cell.type.." -> "..new_pos..": "..new_type)
+		cell.type = new_type
+	end
+
+
+end
 
 function Player:draw()
 	for n, seg in pairs(self.segments) do
@@ -107,9 +150,9 @@ function Player:takeInput(dt)
 		self:turn(dt, 1)
 	end
 
-	if love.keyboard.isDown("w") then
-		self.segments[1]:test()
-	end
+	-- if love.keyboard.isDown("w") then
+	-- 	self.segments[1]:test()
+	-- end
 
 	if love.keyboard.isDown("lshift") then
 		self.speed_mod = self.base_speed * 0.4
@@ -222,7 +265,8 @@ function Segment.new(sprite, x, y, scale)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
-	instance.colour = {1, 1, 1, 1}
+	instance.type = "EMPTY"
+	instance.colour = ItemTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -254,6 +298,7 @@ function Segment:draw()
 end
 
 function Segment:update(x, y, rot)
+	self.colour = ItemTypes[self.type]
 	-- save current position to path
 	table.insert(self.path, PathNode.new(self.x, self.y, self.rot))
 	
