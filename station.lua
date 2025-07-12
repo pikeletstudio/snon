@@ -21,7 +21,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.readyTimer = 0
 	instance.readyTimerMax = 2
 	instance.patience = 0
-	instance.patienceMax = 20
+	instance.patienceMax = 30
 	instance.currentPoints = 0
 	instance.targetPoints = 1
 
@@ -67,6 +67,7 @@ function DropPoint:deposit(cell)
 	if not cell then print("dp"..self.type.." - nil cell") return false end
 	if self.type ~= cell.type then return false end
 	self.currentPoints = self.currentPoints + 1
+	self.patience = math.min(0, self.patience - self.patienceMax * 0.1)
 	if self.currentPoints == self.targetPoints then
 		self.patience = 0
 		self.ready = false
