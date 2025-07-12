@@ -21,6 +21,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.readyTimer = 0
 	instance.readyTimerMax = 2
 	instance.patience = 0
+	instance.patienceMax = 10
 
 	instance.readyBar = ProgressBar.new(x + 20, y + 5, 5, 12)
 	instance.patienceBar = ProgressBar.new(x - 20, y + 5, 5, 12)
@@ -29,7 +30,8 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 end
 
 function DropPoint:draw()
-	self.readyBar:draw(self.readyTimer / self.readyTimerMax)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
+	self.patienceBar:draw(1 - self.patience / self.patienceMax)
 	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
 						self.x, -- love draws from the top left corner
@@ -63,6 +65,7 @@ function DropPoint:deposit(cell)
 	if self.type ~= cell.type then return false end
 	self.colour = {1, 1, 1, 1}
 	self.ready = false
+	self.patience = 0
 	return true
 end
 
@@ -78,7 +81,7 @@ function DropPoint:update(dt)
 
 	else
 		self.patience = self.patience + dt
-		if self.patience >= 5 and false then
+		if self.patience >= self.patienceMax then
 			self:triggerFail()
 		end
 	end
