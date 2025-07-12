@@ -82,6 +82,8 @@ function love.update(dt)
 
 	-- player collision with drop point pickup radius
 	for i, dp in pairs(drop_points) do 
+		dp:update(dt)
+
 		if dp.ready and dp:checkDesposit(player:getBBox("circle")) then
 			seg = player:getFirstFilled()
 			if dp:deposit(seg) then
@@ -93,6 +95,7 @@ function love.update(dt)
 				-- player:grow(1)
 			end
 		end
+
 	end
 
 	new_scale = 2 - math.min(1.75, player.length / 200)

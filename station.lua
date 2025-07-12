@@ -61,7 +61,16 @@ function DropPoint:deposit(cell)
 end
 
 function DropPoint:update(dt)
-	if 
+	if not self.ready then
+		self.readyTimer = self.readyTimer + dt
+		if self.readyTimer >= 2 then
+			self.ready = true
+			self.readyTimer = 0
+			self.colour = ItemTypes[self.type]
+		end
+	end
+end
+
 ----
 
 function spawnDropPoint(item_type)
