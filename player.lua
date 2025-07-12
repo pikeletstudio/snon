@@ -87,27 +87,12 @@ function Player:getFirstFilled()
 end
 
 function Player:cycleCells(steps)
-	-- new_types = {}
-	-- for n, cell in pairs(self.segments) do
-	-- 	if (n-steps) then sign = 0 else sign = (n-steps) / math.abs((n-steps)) end
-	-- 	N = #self.segments * ((sign + 1) / 2)
-	-- 	print(N)
-	-- 	pos = math.abs(N - math.abs(n-steps) )
-	-- 	print(pos)
-	-- 	table.insert(new_types, pos, cell.type)
-	-- end
-	-- for n, cell in pairs(self.segments) do
-	-- 	cell.type = new_types[n]
-	-- 	print(new_types[n])
-	-- 	cell.colour = ItemTypes[cell.type]
-	-- end
 	t_cells = {}
 	for n, cell in pairs(self.segments) do
 		if cell.__index == TransportCell then
 			table.insert(t_cells, {n, cell.type})
 		end
 	end
-
 
 	for i = 1, #t_cells do
 		cell = self.segments[t_cells[i][1]]
