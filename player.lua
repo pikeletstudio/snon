@@ -89,7 +89,7 @@ end
 function Player:cycleCells(steps)
 	t_cells = {}
 	for n, cell in pairs(self.segments) do
-		if cell.__index == TransportCell then
+		if cell.__index == TransportCell and cell.type ~= "EMPTY" then
 			table.insert(t_cells, {n, cell.type})
 		end
 	end
