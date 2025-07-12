@@ -60,6 +60,8 @@ function DropPoint:deposit(cell)
 	return true
 end
 
+function DropPoint:update(dt)
+	if 
 ----
 
 function spawnDropPoint(item_type)
