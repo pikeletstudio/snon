@@ -1,0 +1,30 @@
+if love.keyboard.isDown("a") then
+	self:move(dt, -self.speed, 0)
+end
+
+if love.keyboard.isDown("d") then
+	self:move(dt, self.speed, 0)
+end
+
+if love.keyboard.isDown("w") then
+	self:move(dt, 0, -self.speed)
+end
+
+if love.keyboard.isDown("s") then
+	self:move(dt, 0, self.speed)
+end
+
+mouse_control = false
+
+if mouse_control then
+	target_x, target_y = SCREEN_TRANSFORM:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
+	self.vx = (target_x - self.x) * self.speed * dt
+	self.vy = (target_y - self.y) * self.speed * dt
+end
+
+self.rot = self.rot + (math.atan2((self.y - py), (self.x - px)) - self.rot) * 0.9
+
+function Player:move(dt, dx, dy)
+	self.vx = self.vx + dx * dt
+	self.vy = self.vy + dy * dt
+end
