@@ -91,8 +91,8 @@ function love.update(dt)
 				SCORE = SCORE + 1
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
-				player:cycleCells(1)
-				player:grow(1)
+				player:cycleCells(-1)
+				--player:grow(1)
 			end
 		end
 
