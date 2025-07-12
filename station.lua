@@ -19,7 +19,8 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.pickup_radius = instance.w / 2 * 5
 	instance.ready = true
 	instance.readyTimer = 0
-	instance.pa
+	instance.readyTimerMax = 2
+	instance.patience = 0
 	
 	return instance
 end
@@ -64,12 +65,25 @@ end
 function DropPoint:update(dt)
 	if not self.ready then
 		self.readyTimer = self.readyTimer + dt
-		if self.readyTimer >= 2 then
+		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
+			self.readyTimerMax = 2
 			self.colour = ItemTypes[self.type]
 		end
+
+	else
+		self.patience = self.patience + dt
+		if self.patience >= 5 then
+			self:triggerFail()
+		end
 	end
+
+end
+
+function DropPoint:triggerFail()
+	self.ready = false
+	self.readyTimer
 end
 
 ----
