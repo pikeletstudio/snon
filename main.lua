@@ -40,7 +40,7 @@ end
 
 function love.draw()
 	love.graphics.print("SCORE: "..SCORE, 0, 0, 0)
-	love.graphics.print(printCells(), 10, 20, 0)
+	love.graphics.print(printCells(), 10, 20, 0)love.graphics.print(printCells(), 10, 20, 0)
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
@@ -88,11 +88,10 @@ function love.update(dt)
 			seg = player:getFirstFilled()
 			if dp:deposit(seg) then
 				SCORE = SCORE + 1
-				print("here")
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
 				player:cycleCells(1)
-				-- player:grow(1)
+				player:grow(1)
 			end
 		end
 
