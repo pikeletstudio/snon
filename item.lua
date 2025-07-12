@@ -17,7 +17,7 @@ function Item.new(sprite, x, y, scale, rot)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
-	instance.type = getKeys(ItemTypes)[math.random(#getKeys(ItemTypes))]
+	instance.type = getKeys(ItemTypes, "EMPTY")[math.random(#getKeys(ItemTypes, "EMPTY"))]
 	instance.colour = ItemTypes[instance.type]
 
 	instance.ox = instance.w / 2

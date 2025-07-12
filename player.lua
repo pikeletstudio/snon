@@ -73,6 +73,7 @@ end
 function Player:collect(item_type)
 	-- if no empty cells, return
 	if #self.segments <= self.last_filled then print("no empty cells "..item_type) return false end
+	print(item_type)
 	self.last_filled = self.last_filled + 1
 	self:fillSegment(self.segments[self.last_filled], item_type)
 	return true
