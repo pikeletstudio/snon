@@ -53,7 +53,7 @@ function DropPoint:checkDesposit(bbox)
 end
 
 function DropPoint:deposit(cell)
-	if not cell then return false end
+	if not cell then print("nil cell") return false end
 	if self.type ~= cell.type then return false end
 	self.colour = {1, 1, 1, 1}
 	self.ready = false
