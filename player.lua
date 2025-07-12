@@ -106,6 +106,15 @@ function Player:cycleCells(steps)
 			table.insert(t_cells, {n, cell.type})
 		end
 	end
+
+	s = 1
+	N = 5
+	for i = 1, N do
+		n = (i - s) % 5
+		if n == 0 then n = N end
+		print(n)
+	end
+
 	for i = 1, #t_cells do
 		cell = self.segments[t_cells[i][1]]
 		new_pos = (i - steps) % #t_cells

@@ -4,9 +4,12 @@ require("station")
 
 
 function love.load()
-	s = 2
-	for i = 1, 5 do
-		print((i - s) % 5)
+	s = 1
+	N = 5
+	for i = 1, N do
+		n = (i - s) % 5
+		if n == 0 then n = N end
+		print(n)
 	end
 
 	math.randomseed(os.time())
