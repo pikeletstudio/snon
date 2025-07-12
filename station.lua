@@ -78,7 +78,7 @@ function DropPoint:update(dt)
 
 	else
 		self.patience = self.patience + dt
-		if self.patience >= 5 then
+		if self.patience >= 5 and false then
 			self:triggerFail()
 		end
 	end
@@ -88,6 +88,7 @@ end
 function DropPoint:triggerFail()
 	self.ready = false
 	self.readyTimerMax = 6
+	self.patience = 0
 end
 
 ----
