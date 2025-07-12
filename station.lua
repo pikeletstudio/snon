@@ -22,14 +22,13 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.readyTimerMax = 2
 	instance.patience = 0
 
-	instance.readyBar = ProgressBar.new(x + 20, y + 5, 10, 20)
-	instance.patienceBar = ProgressBar.new(x - 20, y + 5, 10, 20)
+	instance.readyBar = ProgressBar.new(x + 20, y + 5, 5, 12)
+	instance.patienceBar = ProgressBar.new(x - 20, y + 5, 5, 12)
 	
 	return instance
 end
 
 function DropPoint:draw()
-	print(self.readyTimer / self.readyTimerMax)
 	self.readyBar:draw(self.readyTimer / self.readyTimerMax)
 	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
