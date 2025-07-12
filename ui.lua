@@ -16,4 +16,9 @@ function ProgressBar.new(x, y, w, h)
 	instance.h = h
 	return instance
 
-function draw
+function ProgressBar:draw(progress)
+	love.graphics.rectangle("line", x, y, w, h)
+	love.graphics.rectangle("fill", x, y, w, h*progress)
+	
+	
+end

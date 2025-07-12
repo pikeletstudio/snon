@@ -21,6 +21,8 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.readyTimer = 0
 	instance.readyTimerMax = 2
 	instance.patience = 0
+
+	instance.readyBar = ProgressBar.new
 	
 	return instance
 end
