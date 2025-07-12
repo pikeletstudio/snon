@@ -40,6 +40,7 @@ end
 
 function love.draw()
 	love.graphics.print("SCORE: "..SCORE, 0, 0, 0)
+	love.graphics.print(printCells(), 10, 20, 0)
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
@@ -128,7 +129,8 @@ end
 
 function printCells()
 	text = ""
-	for n, cell in pairs(player.segments)
-		text = text..
-
+	for n, cell in pairs(player.segments) do
+		text = text.."("..n.." "..cell.type..")"
+	end
+	return text
 end
