@@ -4,13 +4,6 @@ require("station")
 
 
 function love.load()
-	s = 1
-	N = 5
-	for i = 1, N do
-		n = (i - s) % 5
-		if n == 0 then n = N end
-		print(n)
-	end
 
 	math.randomseed(os.time())
 
@@ -131,4 +124,11 @@ function updateTransform(scale)
 	SCREEN_TRANSFORM = love.math.newTransform()
 	SCREEN_TRANSFORM:scale(scale, scale)
 	SCREEN_TRANSFORM:translate(screenW / scale, screenH / scale)
+end
+
+function printCells()
+	text = ""
+	for n, cell in pairs(player.segments)
+		text = text..
+
 end

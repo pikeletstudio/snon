@@ -107,13 +107,6 @@ function Player:cycleCells(steps)
 		end
 	end
 
-	s = 1
-	N = 5
-	for i = 1, N do
-		n = (i - s) % 5
-		if n == 0 then n = N end
-		print(n)
-	end
 
 	for i = 1, #t_cells do
 		cell = self.segments[t_cells[i][1]]
