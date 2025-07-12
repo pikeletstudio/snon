@@ -39,8 +39,9 @@ function love.load()
 end
 
 function love.draw()
-	love.graphics.print("SCORE: "..SCORE, 0, 0, 0)
-	love.graphics.print(printCells(), 10, 20, 0)love.graphics.print(printCells(), 10, 20, 0)
+	love.graphics.print("SCORE: "..SCORE, 20, 20, 0)
+	love.graphics.print(printCells(), 20, 40, 0)
+	love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
