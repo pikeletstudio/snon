@@ -19,6 +19,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.pickup_radius = instance.w / 2 * 5
 	instance.ready = true
 	instance.readyTimer = 0
+	instance.pa
 	
 	return instance
 end

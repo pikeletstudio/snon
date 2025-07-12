@@ -2,9 +2,9 @@ Item = {}
 Item.__index = Item
 
 ItemTypes = {
-	RED = {1, 0.8, 0.8, 1},
-	GREEN = {0.8, 1, 0.8, 1},
-	BLUE = {0.8, 0.8, 1, 1},
+	RED = {1, 0.7, 0.7, 1},
+	GREEN = {0.7, 1, 0.7, 1},
+	BLUE = {0.7, 0.7, 1, 1},
 	EMPTY = {1, 1, 1, 1}
 }
 
@@ -106,10 +106,12 @@ function checkBBoxCollisionCircle(bbox1, bbox2)
 	end
 end
 
-function drawBBox(mode, bbox)
+function drawBBox(mode, bbox, colour)
+	if colour then love.graphics.setColor(colour) end
 	if mode == "circle" then
 		love.graphics.circle("line", unpack(bbox))
 	else
 		love.graphics.rectangle("line", unpack(bbox))
 	end
+	love.graphics.setColor(1,1,1,1)
 end
