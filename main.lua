@@ -47,7 +47,7 @@ function love.draw()
 	love.graphics.rectangle("fill", 0, 0, 1, 1)
 	player:draw()
 	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
-	for i, dp in pairs(drop_points) do dp:draw() drawBBox("circle", dp:getBBox("circle")) end
+	for i, dp in pairs(drop_points) do dp:draw() drawBBox("circle", dp:getDepositBBox("circle")) end
 
 
 	love.graphics.pop()
@@ -84,7 +84,7 @@ function love.update(dt)
 	for i, dp in pairs(drop_points) do 
 		if dp.ready and dp:checkDesposit(player:getBBox("circle")) then
 			seg = player:getFirstFilled()
-			if dp:deposit() then
+			if dp:deposit(seg) then
 				SCORE = SCORE + 1
 				print("here")
 				player:emptySegment(seg)

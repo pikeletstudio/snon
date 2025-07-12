@@ -40,7 +40,7 @@ function DropPoint:getBBox(mode)
 	return {self.x - self.ox, self.y - self.oy, self.w, self.h}
 end
 
-function DropPoint:getDespositBBox(mode)
+function DropPoint:getDepositBBox(mode)
 	return {self.x, self.y, self.pickup_radius}
 end
 
@@ -49,11 +49,11 @@ function DropPoint:checkCollision(bbox)
 end
 
 function DropPoint:checkDesposit(bbox)
-	return checkBBoxCollisionCircle(bbox, self:getDespositBBox(mode))
+	return checkBBoxCollisionCircle(bbox, self:getDepositBBox(mode))
 end
 
 function DropPoint:deposit(cell)
-	if not cell then print("nil cell") return false end
+	if not cell then print("dp"..self.type.." - nil cell") return false end
 	if self.type ~= cell.type then return false end
 	self.colour = {1, 1, 1, 1}
 	self.ready = false
