@@ -66,8 +66,13 @@ end
 function DropPoint:deposit(cell)
 	if not cell then print("dp"..self.type.." - nil cell") return false end
 	if self.type ~= cell.type then return false end
-
-	self.patience = 0
+	self.currentPoints = self.currentPoints + 1
+	if self.currentPoints == self.targetPoints then
+		self.patience = 0
+		self.ready = false
+		self.currentPoints = 0
+		self.targetPoints = self.targetPoints + 1
+	end
 	return true
 end
 
