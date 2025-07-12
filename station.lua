@@ -83,7 +83,7 @@ end
 
 function DropPoint:triggerFail()
 	self.ready = false
-	self.readyTimer
+	self.readyTimerMax = 6
 end
 
 ----
