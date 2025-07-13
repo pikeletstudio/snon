@@ -122,3 +122,9 @@ FuelStation = {}
 FuelStation.__index = FuelStation
 setmetatable(FuelStation, DropPoint)
 
+function FuelStation.new(sprite, x, y, scale, rot, type)
+	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	setmetatable(instance, FuelStation)
+	return instance
+end
+
