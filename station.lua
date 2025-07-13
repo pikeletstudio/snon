@@ -32,7 +32,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 end
 
 function DropPoint:draw()
-	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
+	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 25)
 	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
 	self.patienceBar:draw(1 - self.patience / self.patienceMax)
 	love.graphics.setColor(self.colour)

@@ -63,7 +63,9 @@ function love.draw()
 	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
 	for i, dp in pairs(drop_points) 
 		do dp:draw() drawBBox("circle", dp:getDepositBBox("circle"), dp.colour) end
-
+	
+	for i, fs in pairs(fuel_stations) 
+		do fs:draw() drawBBox("circle", fs:getDepositBBox("circle"), fs.colour) end
 
 	love.graphics.pop()
 	if GAMEOVER then drawEndScreen() end
@@ -118,17 +120,12 @@ function love.update(dt)
 		fs:update(dt)
 
 		if fs.ready and fs:checkDeposit(player:getBBox("circle")) then
-			seg = player:getFirstFilled()
-			if dp:deposit(seg) then
-				SCORE = SCORE + 1
-				CREDITS = CREDITS + 10
-				player:emptySegment(seg)
-				player.last_filled = player.last_filled - 1
-				player:cycleCells(-1)
-				player:grow(1)
+			if CREDITS >= 10 then
+				CREDITS = CREDITS - 10
+				player.fuel = player.fuel + player.fuelMax * 0.2
 			end
 		end
-
+	end
 
 	end
 
