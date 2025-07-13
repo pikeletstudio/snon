@@ -64,7 +64,7 @@ function DropPoint:checkDeposit(bbox)
 end
 
 function DropPoint:deposit(cell)
-	if not cell then print("dp"..self.type.." - nil cell") return false end
+	if not cell then return false end
 	if self.type ~= cell.type then return false end
 	self.currentPoints = self.currentPoints + 1
 	self.patience = math.max(0, self.patience - self.patienceMax * 0.1)
@@ -126,5 +126,18 @@ function FuelStation.new(sprite, x, y, scale, rot, type)
 	instance = DropPoint.new(sprite, x, y, scale, rot, type)
 	setmetatable(instance, FuelStation)
 	return instance
+end
+
+function FuelStation:draw()
+	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
+	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
+	love.graphics.setColor(self.colour)
+	love.graphics.draw(self.sprite, 
+						self.x, -- love draws from the top left corner
+						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
+						self.rot, self.scale, self.scale,
+						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
