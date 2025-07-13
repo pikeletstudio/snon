@@ -30,7 +30,9 @@ function love.load()
 	item_accum = 0
 	items = {}
 	ignore_types = {"EMPTY", "FUEL"}
-	ItemTypes = getKeys(EntityTypes, ignore_types)[type]
+	ItemTypes = {}
+	for k, _ in pairs(getKeys(EntityTypes, ignore_types)) do
+		
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
@@ -40,9 +42,8 @@ function love.load()
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
 
 	drop_points = {}
-	
 	for type = 1, 3 do
-		table.insert(drop_points, spawnStation(ItemTypes[getKeys(ItemTypes)], DropPoint))
+		table.insert(drop_points, spawnStation(ItemTypes[getKeys(ItemTypes)[type]], DropPoint))
 	end
 	
 	fuel_stations = {}
