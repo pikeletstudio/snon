@@ -114,7 +114,7 @@ function love.update(dt)
 	item_accum = item_accum + dt
 	if item_accum >= item_timer then
 		item_accum = 0
-		table.insert(items, spawnItem(nil, getRandomKey(ItemTypes)))
+		table.insert(items, spawnItem(getRandomKey(ItemTypes), items))
 	end
 
 	-- player collision with items

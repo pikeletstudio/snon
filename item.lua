@@ -73,10 +73,29 @@ function getRandomKey(t)
 	return keys[math.random(#keys)]
 end
 
-function spawnItem(player_pos, type)
-	if not player_pos then
-		u, v = math.random(0, screenW * 2), math.random(0, screenH * 2)
+function spawnItem(type, items)
+	function generatePosition()
+		border = 0.15
+		u = math.random(0, screenW * (1-border) * 2) + screenW * border
+		v = math.random(0, screenH * (1-border) * 2) + screenH * border
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
+		return x, y
+	end
+	
+	function checkPosition(x, y)
+		x, y = generatePosition()
+		for _, item in pairs(items) do
+			if math.abs(x - item.x) < 10 or math.abs(y - item.y) < 10 then
+				return false
+			end
+		end
+		return true
+	end
+
+	valid = false
+	while not valid do
+		x, y = generatePosition()
+		valid = checkPosition(x, y)
 	end
 	
 	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
