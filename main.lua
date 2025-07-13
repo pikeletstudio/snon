@@ -33,15 +33,18 @@ function love.load()
 	ignore_types = {"EMPTY", "FUEL"}
 	ItemTypes = {}
 	item_type_keys = getKeys(EntityTypes, ignore_types)
-
+	printTable(EntityTypes)
 	for k = 1, #item_type_keys do
 		type = item_type_keys[k]
 		print(type)
-		
-		print(EntityTypes[type] == nil)
+	
+		print(tostring(EntityTypes[type]))
 		print("-----------")
-		table.insert(ItemTypes, type, EntityTypes[type])
+		--table.insert(ItemTypes, type, EntityTypes[type])
+		ItemTypes[type] = EntityTypes[type]
 	end
+
+	printTable(ItemTypes)
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
@@ -188,6 +191,6 @@ end
 
 function printTable(t)
 	for k, v in pairs(t) do
-		print(k..": "..v)
+		print(tostring(k)..": "..tostring(v))
 	end
 end
