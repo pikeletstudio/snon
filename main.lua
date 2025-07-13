@@ -60,6 +60,7 @@ function love.draw()
 end
 
 function love.update(dt)
+	if player.fuel <= 0 then endGame() end
 	if PAUSE then return end
 
 	-- player fixed tick update
@@ -134,6 +135,12 @@ function updateTransform(scale)
 	SCREEN_TRANSFORM:scale(scale, scale)
 	SCREEN_TRANSFORM:translate(screenW / scale, screenH / scale)
 end
+
+function endGame()
+	PAUSE = false
+	
+end
+
 
 function printCells()
 	text = ""
