@@ -141,3 +141,13 @@ function FuelStation:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
+function FuelStation:update(dt)
+	if not self.ready then
+		self.colour = {1, 1, 1, 1}
+		self.readyTimer = self.readyTimer + dt
+		if self.readyTimer >= self.readyTimerMax then
+			self.ready = true
+			self.readyTimer = 0
+			self.colour = FUEL_COLOUR
+		end
+end
