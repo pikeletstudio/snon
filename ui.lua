@@ -28,3 +28,7 @@ function ProgressBar:draw(progress)
 		love.graphics.rectangle("fill", self.x, self.y, self.w*progress, self.h)
 	end
 end
+
+function drawEndScreen()
+	love.graphics.rectangle("fill", screenW*)
+
