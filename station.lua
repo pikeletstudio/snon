@@ -67,7 +67,7 @@ function DropPoint:deposit(cell)
 	if not cell then print("dp"..self.type.." - nil cell") return false end
 	if self.type ~= cell.type then return false end
 	self.currentPoints = self.currentPoints + 1
-	self.patience = math.min(0, self.patience - self.patienceMax * 0.1)
+	self.patience = math.max(0, self.patience - self.patienceMax * 0.1)
 	if self.currentPoints == self.targetPoints then
 		self.patience = 0
 		self.ready = false
