@@ -1,7 +1,7 @@
 Item = {}
 Item.__index = Item
 
-ItemTypes = {
+EntityTypes = {
 	RED = {1, 0.7, 0.7, 1},
 	GREEN = {0.7, 1, 0.7, 1},
 	BLUE = {0.7, 0.7, 1, 1},

@@ -29,6 +29,8 @@ function love.load()
 	item_timer = 2 -- seconds
 	item_accum = 0
 	items = {}
+	ignore_types = {"EMPTY", "FUEL"}
+	ItemTypes = getKeys(EntityTypes, ignore_types)[type]
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
@@ -38,10 +40,9 @@ function love.load()
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
 
 	drop_points = {}
-	ignore_types = {"EMPTY", "FUEL"}
 	
 	for type = 1, 3 do
-		table.insert(drop_points, spawnStation(getKeys(ItemTypes, ignore_types)[type], DropPoint))
+		table.insert(drop_points, spawnStation(ItemTypes, DropPoint))
 	end
 	
 	fuel_stations = {}
@@ -86,7 +87,7 @@ function love.update(dt)
 	item_accum = item_accum + dt
 	if item_accum >= item_timer then
 		item_accum = 0
-		table.insert(items, spawnItem())
+		table.insert(items, spawnItem(ItemTypes[math.random(ItemTypes)]))
 	end
 
 	-- player collision with items
