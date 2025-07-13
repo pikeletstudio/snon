@@ -32,6 +32,8 @@ function love.load()
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
 	player = Player.new(fixed_tick, player_sprite_head, player_sprite_body, 0, 0, 1)
 
+	player_fuel_bar = ProgressBar(50, 50, screenW * 2 - 100, 10, "horizontal")
+
 	drop_points = {}
 	for type = 1, 3 do
 		table.insert(drop_points, spawnDropPoint(getKeys(ItemTypes, "EMPTY")[type]))

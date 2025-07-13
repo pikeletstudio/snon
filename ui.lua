@@ -8,7 +8,7 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar.new(mode, x, y, w, h)
+function ProgressBar.new(x, y, w, h, mode)
 	local instance = setmetatable({}, ProgressBar)
 	if not mode then mode = "vertical" end
 	instance.mode = mode
@@ -23,6 +23,7 @@ function ProgressBar:draw(progress)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	if mode == "vertical" then
 		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h*progress)
-	
-	
+	else
+		love.graphics.rectangle("fill", self.x, self.y, self.w*progress, self.h)
+	end
 end
