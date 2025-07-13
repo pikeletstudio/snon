@@ -57,7 +57,7 @@ function getKeys(t, exclude)
 	for k, v in pairs(t) do
 		flag = true
 		for i = 1, #exclude do
-			if k == exclude[e] then
+			if k == exclude[i] then
 				flag = false
 			end
 		end

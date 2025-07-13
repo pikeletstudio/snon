@@ -39,11 +39,14 @@ function love.load()
 
 	drop_points = {}
 	ignore_types = {"EMPTY", "FUEL"}
-	for k,v in pairs(getKeys(ItemTypes, ignore_types)) do
-		print(k..v)
-	end
+	
 	for type = 1, 3 do
 		table.insert(drop_points, spawnStation(getKeys(ItemTypes, ignore_types)[type], DropPoint))
+	end
+	
+	fuel_stations = {}
+	for f = 1, 2 do
+		table.insert(fuel_stations, spawnStation("FUEL", FuelStation))
 	end
 end
 
