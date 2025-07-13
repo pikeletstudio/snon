@@ -114,14 +114,22 @@ function spawnStation(item_type, StationType, stations)
 		return x, y
 	end
 	
+	function checkPosition(x, y)
+		x, y = generatePosition()
+		for _, s_type in pairs(stations) do
+			for _, station in pairs(s_type) do
+					if x == station.x or y == station.y then
+						return false
+			end
+		end
+		return true
+	end
+
 	valid = false
 	while not valid do
 		x, y = generatePosition()
-		for _, s_type in pairs(stations) do
-			for _, station in pairs(s_type)
-					if x == station.x or y == station.y then
-						con
-
+		valid = checkPosition(x, y)
+	end
 
 	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
 	return StationType.new(station_sprite, x, y, 1, math.random(-math.pi, math.pi), item_type)
