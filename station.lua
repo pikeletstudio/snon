@@ -105,18 +105,19 @@ end
 
 ----
 
-function spawnDropPoint(item_type)
+function spawnStation(item_type, StationType)
 	border = 0.5
 	u = math.random(0, screenW * (1-border) * 2) + screenW * border
 	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	
 	player_sprite_body = love.graphics.newImage("assets/droppoint_empty.png")
-	return DropPoint.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), item_type)
+	return StationType.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end
 
 
 ----
+FUEL_COLOUR = {1, 1, 0.8, 1}
 
 FuelStation = {}
 FuelStation.__index = FuelStation
@@ -124,6 +125,8 @@ setmetatable(FuelStation, DropPoint)
 
 function FuelStation.new(sprite, x, y, scale, rot, type)
 	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	instance.type = "FUEL"
+	instance.colour = FUEL_COLOUR
 	setmetatable(instance, FuelStation)
 	return instance
 end

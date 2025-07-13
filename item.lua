@@ -53,8 +53,10 @@ end
 function getKeys(t, exclude)
 	keys = {}
 	for k, v in pairs(t) do
-		if k ~= exclude then
-			table.insert(keys, k)
+		for i = 1, #exclude do
+			if k ~= exclude then
+				
+table.insert(keys, k)
 		end
 	end
 	return keys
