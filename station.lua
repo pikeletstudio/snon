@@ -124,6 +124,7 @@ setmetatable(FuelStation, DropPoint)
 
 function FuelStation.new(sprite, x, y, scale, rot, type)
 	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	instance.readyTimerMax = 4
 	setmetatable(instance, FuelStation)
 	return instance
 end
@@ -148,7 +149,7 @@ function FuelStation:update(dt)
 		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
-			self.colour = ItemTypes[self.type]
+			self.colour = EntityTypes[self.type]
 		end
 	end
 end
