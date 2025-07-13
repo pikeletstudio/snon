@@ -106,7 +106,7 @@ end
 ----
 
 function spawnStation(item_type, StationType)
-	border = 0.5
+	border = 0.35
 	u = math.random(0, screenW * (1-border) * 2) + screenW * border
 	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)

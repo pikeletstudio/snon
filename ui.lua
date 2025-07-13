@@ -26,7 +26,7 @@ function drawEndScreen()
 	spx, spy = 0.1, 0.2
 	love.graphics.rectangle("fill", screenW*spx, screenH*spy, screenW*(1-spx)*2, screenH*(1-spy)*2)
 	love.graphics.setColor(0, 0, 0, 1)
-	love.graphics.print("Score: "..SCORE, screenW*spx*2, screenH*spy*2, 0, 10, 10)
+	love.graphics.print("Score: "..SCORE, screenW*spx*2, screenH*spy*2, 0, 5)
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
