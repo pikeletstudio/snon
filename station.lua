@@ -124,7 +124,7 @@ setmetatable(FuelStation, DropPoint)
 
 function FuelStation.new(sprite, x, y, scale, rot, type)
 	instance = DropPoint.new(sprite, x, y, scale, rot, type)
-	instance.readyTimerMax = 4
+	instance.readyTimerMax = 6
 	setmetatable(instance, FuelStation)
 	return instance
 end
@@ -155,5 +155,47 @@ function FuelStation:update(dt)
 end
 
 function FuelStation:refill()
+	self.ready = false
+end
+
+----
+
+Shipyard = {}
+Shipyard.__index = Shipyard
+setmetatable(Shipyard, DropPoint)
+
+function Shipyard.new(sprite, x, y, scale, rot, type)
+	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	instance.readyTimerMax = 12
+	setmetatable(instance, Shipyard)
+	return instance
+end
+
+function Shipyard:draw()
+	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
+	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
+	love.graphics.setColor(self.colour)
+	love.graphics.draw(self.sprite, 
+						self.x, -- love draws from the top left corner
+						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
+						self.rot, self.scale, self.scale,
+						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Shipyard:update(dt)
+	if not self.ready then
+		self.colour = {1, 1, 1, 1}
+		self.readyTimer = self.readyTimer + dt
+		if self.readyTimer >= self.readyTimerMax then
+			self.ready = true
+			self.readyTimer = 0
+			self.colour = EntityTypes[self.type]
+		end
+	end
+end
+
+function Shipyard:refill()
 	self.ready = false
 end

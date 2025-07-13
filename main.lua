@@ -55,6 +55,11 @@ function love.load()
 	for f = 1, 2 do
 		table.insert(fuel_stations, spawnStation("FUEL", FuelStation))
 	end
+	
+	shipyards = {}
+	for f = 1, 1 do
+		table.insert(shipyards, spawnStation("EMPTY", Shipyard))
+	end
 end
 
 function love.draw()
@@ -119,7 +124,7 @@ function love.update(dt)
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
 				player:cycleCells(-1)
-				player:grow(1)
+				--player:grow(1)
 			end
 		end
 
