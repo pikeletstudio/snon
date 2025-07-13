@@ -59,7 +59,7 @@ function DropPoint:checkCollision(bbox)
 	return checkBBoxCollision2(bbox, self:getBBox(mode))
 end
 
-function DropPoint:checkDesposit(bbox)
+function DropPoint:checkDeposit(bbox)
 	return checkBBoxCollisionCircle(bbox, self:getDepositBBox(mode))
 end
 

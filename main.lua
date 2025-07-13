@@ -94,7 +94,7 @@ function love.update(dt)
 	for i, dp in pairs(drop_points) do 
 		dp:update(dt)
 
-		if dp.ready and dp:checkDesposit(player:getBBox("circle")) then
+		if dp.ready and dp:checkDeposit(player:getBBox("circle")) then
 			seg = player:getFirstFilled()
 			if dp:deposit(seg) then
 				SCORE = SCORE + 1
