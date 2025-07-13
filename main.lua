@@ -139,7 +139,7 @@ function updateTransform(scale)
 end
 
 function endGame()
-	PAUSE = false
+	PAUSE = true
 	GAMEOVER = true
 end
 
