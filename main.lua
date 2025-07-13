@@ -33,18 +33,10 @@ function love.load()
 	ignore_types = {"EMPTY", "FUEL"}
 	ItemTypes = {}
 	item_type_keys = getKeys(EntityTypes, ignore_types)
-	printTable(EntityTypes)
 	for k = 1, #item_type_keys do
 		type = item_type_keys[k]
-		print(type)
-	
-		print(tostring(EntityTypes[type]))
-		print("-----------")
-		--table.insert(ItemTypes, type, EntityTypes[type])
 		ItemTypes[type] = EntityTypes[type]
 	end
-
-	printTable(ItemTypes)
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
@@ -52,10 +44,15 @@ function love.load()
 	
 	pfb_pos = 0.2 -- % of screen width in from left side
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
-
+	
+	printTable(getKeys(ItemTypes))
 	drop_points = {}
-	for type = 1, 3 do
-		table.insert(drop_points, spawnStation(ItemTypes[getKeys(ItemTypes)[type]], DropPoint))
+	for d = 1, 3 do
+		print(d)
+		type = getKeys(ItemTypes)[d]
+		print(type)
+		printTable(ItemTypes[type])
+		table.insert(drop_points, spawnStation(ItemTypes[type], DropPoint))
 	end
 	
 	fuel_stations = {}
