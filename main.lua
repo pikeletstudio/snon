@@ -113,6 +113,23 @@ function love.update(dt)
 			end
 		end
 
+	-- player collision with fuel station pickup radius
+	for i, fs in pairs(fuel_stations) do 
+		fs:update(dt)
+
+		if fs.ready and fs:checkDeposit(player:getBBox("circle")) then
+			seg = player:getFirstFilled()
+			if dp:deposit(seg) then
+				SCORE = SCORE + 1
+				CREDITS = CREDITS + 10
+				player:emptySegment(seg)
+				player.last_filled = player.last_filled - 1
+				player:cycleCells(-1)
+				player:grow(1)
+			end
+		end
+
+
 	end
 
 	new_scale = 2 - math.min(1.75, player.length / 200)
