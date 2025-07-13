@@ -11,7 +11,9 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = type
-	instance.colour = ItemTypes[instance.type]
+	instance.colour = EntityTypes[instance.type]
+	print(type)
+	print(instance.colour)
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -111,8 +113,8 @@ function spawnStation(item_type, StationType)
 	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	
-	player_sprite_body = love.graphics.newImage("assets/droppoint_empty.png")
-	return StationType.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), item_type)
+	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
+	return StationType.new(station_sprite, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end
 
 

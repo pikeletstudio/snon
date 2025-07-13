@@ -1,7 +1,7 @@
-require("player")
 require("item")
 require("station")
 require("ui")
+require("player")
 
 function love.load()
 

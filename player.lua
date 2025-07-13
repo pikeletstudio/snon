@@ -256,7 +256,7 @@ function Segment.new(sprite, x, y, scale)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = "EMPTY"
-	instance.colour = ItemTypes[instance.type]
+	instance.colour = EntityTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
