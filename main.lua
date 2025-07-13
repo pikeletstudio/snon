@@ -20,6 +20,7 @@ function love.load()
 	SCORE = 0
 	CREDITS = 0
 	GAMEOVER = false
+	TIME = 0
 
 	-- fixed update settings
 	PAUSE = false
@@ -91,6 +92,14 @@ end
 function love.update(dt)
 	if player.fuel <= 0 then endGame() end
 	if PAUSE then return end
+	
+	TIME = TIME + dt
+	if TIME > 0.1 then
+		if not player_grow_first then
+			player:grow(1)
+			player_grow_first = true
+		end
+	end
 
 	-- player fixed tick update
 	tick_accum = tick_accum + dt
