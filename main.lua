@@ -29,13 +29,16 @@ function love.load()
 	item_timer = 2 -- seconds
 	item_accum = 0
 	items = {}
+
 	ignore_types = {"EMPTY", "FUEL"}
 	ItemTypes = {}
 	item_type_keys = getKeys(EntityTypes, ignore_types)
-	for k = 0, #item_type_keys do
+	for k = 1, #item_type_keys do
 		type = item_type_keys[k]
-		table.insert(ItemTypes, type, EntityTypes[k])
-		print(ItemTypes[k])
+		print(type)
+		print(EntityTypes[type])
+		print("-----------")
+		table.insert(ItemTypes, type, EntityTypes[type])
 	end
 
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
