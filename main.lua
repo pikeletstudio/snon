@@ -59,8 +59,9 @@ end
 
 function love.draw()
 	love.graphics.print("SCORE: "..SCORE, 20, 20, 0)
-	love.graphics.print(printCells(), 20, 40, 0)
-	love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
+	love.graphics.print("CREDITS: "..CREDITS, 20, 40, 0)
+	--love.graphics.print(printCells(), 20, 40, 0)
+	--love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
 	player_fuel_bar:draw(player.fuel / player.fuelMax)
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
@@ -125,7 +126,6 @@ function love.update(dt)
 	-- player collision with fuel station pickup radius
 	for i, fs in pairs(fuel_stations) do 
 		fs:update(dt)
-
 		if fs.ready and fs:checkDeposit(player:getBBox("circle")) then
 			if CREDITS >= 10 then
 				CREDITS = CREDITS - 10

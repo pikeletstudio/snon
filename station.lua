@@ -152,3 +152,5 @@ function FuelStation:update(dt)
 		end
 	end
 end
+
+function FuelStation
