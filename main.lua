@@ -32,7 +32,7 @@ function love.load()
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
 	player = Player.new(fixed_tick, player_sprite_head, player_sprite_body, 0, 0, 1)
 
-	player_fuel_bar = ProgressBar(50, 50, screenW * 2 - 100, 10, "horizontal")
+	player_fuel_bar = ProgressBar.new(50, 50, screenW * (), 10, "horizontal")
 
 	drop_points = {}
 	for type = 1, 3 do
@@ -44,6 +44,7 @@ function love.draw()
 	love.graphics.print("SCORE: "..SCORE, 20, 20, 0)
 	love.graphics.print(printCells(), 20, 40, 0)
 	love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
+	player_fuel_bar:draw(player.fuel / player.fuelMax)
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 

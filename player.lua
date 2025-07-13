@@ -22,6 +22,9 @@ function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	instance.base_speed = 1.5 / fixed_tick
 	instance.speed_mod = 0
 	instance.moving = true
+	
+	instance.fuelMax = 100
+	instance.fuel = instance.fuelMax
 
 	return instance
 end
@@ -112,6 +115,8 @@ function Player:draw()
 end
 
 function Player:update(dt)
+	self.fuel = self.fuel - dt
+
 	local px = self.x
 	local py = self.y
 
