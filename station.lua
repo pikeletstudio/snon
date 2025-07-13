@@ -106,8 +106,9 @@ end
 ----
 
 function spawnDropPoint(item_type)
-	border = 0.1
-	u, v = math.random(0, screenW * (1-border) * 2), math.random(0, screenH * (1-border) * 2)
+	border = 0.5
+	u = math.random(0, screenW * (1-border) * 2) + screenW * border
+	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	
 	player_sprite_body = love.graphics.newImage("assets/droppoint_empty.png")

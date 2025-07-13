@@ -8,7 +8,7 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar.new(x, y, w, h)
+function ProgressBar.new(x, y, w, h, r)
 	local instance = setmetatable({}, ProgressBar)
 	instance.x = x
 	instance.y = y
@@ -18,8 +18,8 @@ function ProgressBar.new(x, y, w, h)
 end
 
 function ProgressBar:draw(progress)
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h*progress)
+	love.graphics.rectangle("line", self.x, self.y, self.w, self.h, r)
+	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h*progress, r)
 	
 	
 end
