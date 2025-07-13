@@ -18,6 +18,7 @@ function love.load()
 	SCREEN_TRANSFORM:translate(screenW / screenScale, screenH / screenScale)
 
 	SCORE = 0
+	GAMEOVER = false
 
 	-- fixed update settings
 	PAUSE = false
@@ -57,6 +58,7 @@ function love.draw()
 
 
 	love.graphics.pop()
+	if GAMEOVER then drawEndScreen() end
 end
 
 function love.update(dt)
@@ -138,7 +140,7 @@ end
 
 function endGame()
 	PAUSE = false
-	
+	GAMEOVER = true
 end
 
 

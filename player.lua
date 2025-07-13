@@ -23,7 +23,7 @@ function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	instance.speed_mod = 0
 	instance.moving = true
 	
-	instance.fuelMax = 100
+	instance.fuelMax = 10
 	instance.fuel = instance.fuelMax
 
 	return instance

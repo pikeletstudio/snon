@@ -33,5 +33,5 @@ function drawEndScreen()
 	spx, spy = 0.1, 0.2
 	love.graphics.rectangle("fill", screenW*spx, screenH*spy, screenW*(1-spx)*2, screenH*(1-spy)*2)
 	love.graphics.print("Score: "..SCORE, screenW*spx*2, screenH*spy*2)
-
+end
 
