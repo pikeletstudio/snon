@@ -112,9 +112,9 @@ function spawnStation(item_type, StationType)
 	u = math.random(0, screenW * (1-border) * 2) + screenW * border
 	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
-	
+	print(item_type)
 	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
-	return StationType.new(station_sprite, x, y, 1, math.random(-math.pi, math.pi), 0, item_type)
+	return StationType.new(station_sprite, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end
 
 

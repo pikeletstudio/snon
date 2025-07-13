@@ -48,11 +48,8 @@ function love.load()
 	printTable(getKeys(ItemTypes))
 	drop_points = {}
 	for d = 1, 3 do
-		print(d)
 		type = getKeys(ItemTypes)[d]
-		print(type)
-		printTable(ItemTypes[type])
-		table.insert(drop_points, spawnStation(ItemTypes[type], DropPoint))
+		table.insert(drop_points, spawnStation(type, DropPoint))
 	end
 	
 	fuel_stations = {}
