@@ -19,7 +19,7 @@ function Item.new(sprite, x, y, scale, rot, type)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = type
-	instance.colour = ItemTypes[instance.type]
+	instance.colour = EntityTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -70,8 +70,8 @@ end
 
 function getRandomKey(t)
 	keys = getKeys(t)
-	return 
-
+	return keys[math.random(#keys)]
+end
 
 function spawnItem(player_pos, type)
 	if not player_pos then
