@@ -58,8 +58,8 @@ function love.load()
 end
 
 function love.draw()
-	love.graphics.print("SCORE: "..SCORE, 20, 20, 0)
-	love.graphics.print("CREDITS: "..CREDITS, 20, 40, 0)
+	love.graphics.print("SCORE: "..SCORE, 20, 20, 0, 1.25)
+	love.graphics.print("CREDITS: "..CREDITS, 20, 40, 0, 1.25)
 	--love.graphics.print(printCells(), 20, 40, 0)
 	--love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
 	player_fuel_bar:draw(player.fuel / player.fuelMax)

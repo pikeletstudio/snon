@@ -153,4 +153,6 @@ function FuelStation:update(dt)
 	end
 end
 
-function FuelStation
+function FuelStation:unload()
+	self.ready = false
+end
