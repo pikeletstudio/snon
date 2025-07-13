@@ -9,7 +9,7 @@ ItemTypes = {
 	FUEL = {1, 1, 0.8, 1}
 }
 
-function Item.new(sprite, x, y, scale, rot)
+function Item.new(sprite, x, y, scale, rot, type)
 	local instance = setmetatable({}, Item)
 	instance.x = x
 	instance.y = y
@@ -18,7 +18,7 @@ function Item.new(sprite, x, y, scale, rot)
 	instance.w = sprite:getWidth() * scale
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
-	instance.type = getKeys(ItemTypes, "EMPTY")[math.random(#getKeys(ItemTypes, "EMPTY"))]
+	instance.type = type
 	instance.colour = ItemTypes[instance.type]
 
 	instance.ox = instance.w / 2
@@ -69,14 +69,14 @@ function getKeys(t, exclude)
 end
 
 
-function spawnItem(player_pos)
+function spawnItem(player_pos, type)
 	if not player_pos then
 		u, v = math.random(0, screenW * 2), math.random(0, screenH * 2)
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
 	end
 	
 	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
-	return Item.new(item_sprite, x, y, 1, math.random(-math.pi, math.pi))
+	return Item.new(item_sprite, x, y, 1, math.random(-math.pi, math.pi), type)
 end
 
 function checkBBoxCollision(u, v, a, b, x, y, w, h)

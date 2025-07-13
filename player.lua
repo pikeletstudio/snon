@@ -75,8 +75,7 @@ end
 
 function Player:collect(item_type)
 	-- if no empty cells, return
-	if #self.segments <= self.last_filled then print("no empty cells "..item_type) return false end
-	print(item_type)
+	if #self.segments <= self.last_filled then return false end
 	self.last_filled = self.last_filled + 1
 	self:fillSegment(self.segments[self.last_filled], item_type)
 	return true
@@ -92,7 +91,7 @@ end
 function Player:cycleCells(steps)
 	t_cells = {}
 	for n, cell in pairs(self.segments) do
-		if cell.__index == TransportCell then --and cell.type ~= "EMPTY" then
+		if cell.__index == TransportCell then
 			table.insert(t_cells, {n, cell.type})
 		end
 	end
@@ -102,7 +101,7 @@ function Player:cycleCells(steps)
 		new_pos = (i - steps) % #t_cells
 		if new_pos == 0 then new_pos = #t_cells end
 		new_type = t_cells[new_pos][2]
-		print(i..": "..cell.type.." swaps with "..new_pos..": "..new_type)
+		--print(i..": "..cell.type.." swaps with "..new_pos..": "..new_type)
 		cell.type = new_type
 	end
 end
