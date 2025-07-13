@@ -31,8 +31,9 @@ function love.load()
 	player_sprite_head = love.graphics.newImage("assets/player_head.png")
 	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
 	player = Player.new(fixed_tick, player_sprite_head, player_sprite_body, 0, 0, 1)
-
-	player_fuel_bar = ProgressBar.new(50, 50, screenW * (), 10, "horizontal")
+	
+	pfb_pos = 0.2 -- % of screen width in from left side
+	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 70, screenW * (1-pfb_pos) * 2, 10, "horizontal")
 
 	drop_points = {}
 	for type = 1, 3 do

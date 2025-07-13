@@ -10,7 +10,7 @@ ProgressBar.__index = ProgressBar
 
 function ProgressBar.new(x, y, w, h, mode)
 	local instance = setmetatable({}, ProgressBar)
-	if not mode then mode = "vertical" end
+	if mode == nil then mode = "vertical" end
 	instance.mode = mode
 	instance.x = x
 	instance.y = y
