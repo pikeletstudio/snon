@@ -68,6 +68,10 @@ function getKeys(t, exclude)
 	return keys
 end
 
+function getRandomKey(t)
+	keys = getKeys(t)
+	return 
+
 
 function spawnItem(player_pos, type)
 	if not player_pos then

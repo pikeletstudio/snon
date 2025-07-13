@@ -289,7 +289,7 @@ function Segment:draw()
 end
 
 function Segment:update(x, y, rot)
-	self.colour = ItemTypes[self.type]
+	self.colour = EntityTypes[self.type]
 	-- save current position to path
 	table.insert(self.path, PathNode.new(self.x, self.y, self.rot))
 	

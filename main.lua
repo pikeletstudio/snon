@@ -93,6 +93,7 @@ function love.update(dt)
 	item_accum = item_accum + dt
 	if item_accum >= item_timer then
 		item_accum = 0
+		type = 
 		table.insert(items, spawnItem(ItemTypes[math.random(ItemTypes)]))
 	end
 
