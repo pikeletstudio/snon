@@ -12,8 +12,6 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.scale = scale
 	instance.type = type
 	instance.colour = EntityTypes[instance.type]
-	print(type)
-	print(tostring(instance.colour))
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -112,7 +110,7 @@ function spawnStation(item_type, StationType)
 	u = math.random(0, screenW * (1-border) * 2) + screenW * border
 	v = math.random(0, screenH * (1-border) * 2) + screenH * border
 	x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
-	print(item_type)
+
 	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
 	return StationType.new(station_sprite, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end

@@ -45,7 +45,6 @@ function love.load()
 	pfb_pos = 0.2 -- % of screen width in from left side
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
 	
-	printTable(getKeys(ItemTypes))
 	drop_points = {}
 	for d = 1, 3 do
 		type = getKeys(ItemTypes)[d]
