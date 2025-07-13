@@ -150,4 +150,5 @@ function FuelStation:update(dt)
 			self.readyTimer = 0
 			self.colour = ItemTypes[self.type]
 		end
+	end
 end

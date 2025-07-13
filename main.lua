@@ -38,9 +38,12 @@ function love.load()
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
 
 	drop_points = {}
-	ignore
+	ignore_types = {"EMPTY", "FUEL"}
+	for k,v in pairs(getKeys(ItemTypes, ignore_types)) do
+		print(k..v)
+	end
 	for type = 1, 3 do
-		table.insert(drop_points, spawnStation(getKeys(ItemTypes, "EMPTY")[type]))
+		table.insert(drop_points, spawnStation(getKeys(ItemTypes, ignore_types)[type], DropPoint))
 	end
 end
 
