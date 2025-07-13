@@ -117,7 +117,6 @@ end
 
 
 ----
-FUEL_COLOUR = {1, 1, 0.8, 1}
 
 FuelStation = {}
 FuelStation.__index = FuelStation
@@ -125,8 +124,6 @@ setmetatable(FuelStation, DropPoint)
 
 function FuelStation.new(sprite, x, y, scale, rot, type)
 	instance = DropPoint.new(sprite, x, y, scale, rot, type)
-	instance.type = "FUEL"
-	instance.colour = FUEL_COLOUR
 	setmetatable(instance, FuelStation)
 	return instance
 end
@@ -151,6 +148,6 @@ function FuelStation:update(dt)
 		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
-			self.colour = FUEL_COLOUR
+			self.colour = ItemTypes[self.type]
 		end
 end

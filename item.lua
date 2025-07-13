@@ -5,7 +5,8 @@ ItemTypes = {
 	RED = {1, 0.7, 0.7, 1},
 	GREEN = {0.7, 1, 0.7, 1},
 	BLUE = {0.7, 0.7, 1, 1},
-	EMPTY = {1, 1, 1, 1}
+	EMPTY = {1, 1, 1, 1},
+	FUEL = {1, 1, 0.8, 1}
 }
 
 function Item.new(sprite, x, y, scale, rot)
@@ -51,12 +52,17 @@ end
 ----
 
 function getKeys(t, exclude)
+	if not exclude then exclude = {} end
 	keys = {}
 	for k, v in pairs(t) do
+		flag = true
 		for i = 1, #exclude do
-			if k ~= exclude then
-				
-table.insert(keys, k)
+			if k == exclude[e] then
+				flag = false
+			end
+		end
+		if flag then
+			table.insert(keys, k)
 		end
 	end
 	return keys
