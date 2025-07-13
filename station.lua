@@ -114,3 +114,11 @@ function spawnDropPoint(item_type)
 	player_sprite_body = love.graphics.newImage("assets/droppoint_empty.png")
 	return DropPoint.new(player_sprite_body, x, y, 1, math.random(-math.pi, math.pi), item_type)
 end
+
+
+----
+
+FuelStation = {}
+FuelStation.__index = FuelStation
+setmetatable(FuelStation, DropPoint)
+

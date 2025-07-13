@@ -18,6 +18,7 @@ function love.load()
 	SCREEN_TRANSFORM:translate(screenW / screenScale, screenH / screenScale)
 
 	SCORE = 0
+	CREDITS = 0
 	GAMEOVER = false
 
 	-- fixed update settings
@@ -97,6 +98,7 @@ function love.update(dt)
 			seg = player:getFirstFilled()
 			if dp:deposit(seg) then
 				SCORE = SCORE + 1
+				CREDITS = CREDITS + 10
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
 				player:cycleCells(-1)
