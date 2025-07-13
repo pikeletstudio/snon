@@ -12,6 +12,8 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.scale = scale
 	instance.type = type
 	instance.colour = EntityTypes[instance.type]
+	print(type)
+	print(tostring(instance.colour))
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
