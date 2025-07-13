@@ -57,7 +57,7 @@ function love.load()
 	end
 	
 	shipyards = {}
-	for f = 1, 1 do
+	for s = 1, 1 do
 		table.insert(shipyards, spawnStation("EMPTY", Shipyard))
 	end
 end
@@ -79,6 +79,9 @@ function love.draw()
 	
 	for i, fs in pairs(fuel_stations) 
 		do fs:draw() drawBBox("circle", fs:getDepositBBox("circle"), fs.colour) end
+	
+	for i, sy in pairs(shipyards) 
+		do sy:draw() drawBBox("circle", sy:getDepositBBox("circle"), sy.colour) end
 
 	love.graphics.pop()
 	if GAMEOVER then drawEndScreen() end
@@ -127,6 +130,7 @@ function love.update(dt)
 				--player:grow(1)
 			end
 		end
+	end
 
 	-- player collision with fuel station pickup radius
 	for i, fs in pairs(fuel_stations) do 
@@ -139,7 +143,17 @@ function love.update(dt)
 			end
 		end
 	end
-
+	
+	-- player collision with shipyard pickup radius
+	for i, sy in pairs(shipyards) do 
+		sy:update(dt)
+		if sy.ready and sy:checkDeposit(player:getBBox("circle")) then
+			if CREDITS >= 50 then
+				CREDITS = CREDITS - 50
+				player:grow(1)
+				sy:refill()
+			end
+		end
 	end
 
 	new_scale = 2 - math.min(1.75, player.length / 200)
