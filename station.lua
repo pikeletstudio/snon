@@ -118,8 +118,9 @@ function spawnStation(item_type, StationType, stations)
 		x, y = generatePosition()
 		for _, s_type in pairs(stations) do
 			for _, station in pairs(s_type) do
-					if x == station.x or y == station.y then
+					if math.abs(x - station.x) < 50 or math.abs(y - station.y) < 50 then
 						return false
+					end
 			end
 		end
 		return true
