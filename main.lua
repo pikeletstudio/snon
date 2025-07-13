@@ -33,10 +33,12 @@ function love.load()
 	ignore_types = {"EMPTY", "FUEL"}
 	ItemTypes = {}
 	item_type_keys = getKeys(EntityTypes, ignore_types)
+
 	for k = 1, #item_type_keys do
 		type = item_type_keys[k]
 		print(type)
-		print(EntityTypes[type])
+		
+		print(EntityTypes[type] == nil)
 		print("-----------")
 		table.insert(ItemTypes, type, EntityTypes[type])
 	end
@@ -182,4 +184,10 @@ function printCells()
 		text = text.."("..n.." "..cell.type..")"
 	end
 	return text
+end
+
+function printTable(t)
+	for k, v in pairs(t) do
+		print(k..": "..v)
+	end
 end
