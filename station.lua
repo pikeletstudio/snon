@@ -13,6 +13,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.type = type
 	instance.colour = EntityTypes[instance.type]
 	print(type)
+	print(EntityTypes["FUEL"])
 	print(instance.colour)
 
 	instance.ox = instance.w / 2
