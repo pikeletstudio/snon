@@ -130,6 +130,7 @@ function love.update(dt)
 			if CREDITS >= 10 then
 				CREDITS = CREDITS - 10
 				player.fuel = player.fuel + player.fuelMax * 0.2
+				fs:refill()
 			end
 		end
 	end

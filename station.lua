@@ -153,6 +153,6 @@ function FuelStation:update(dt)
 	end
 end
 
-function FuelStation:unload()
+function FuelStation:refill()
 	self.ready = false
 end
