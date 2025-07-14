@@ -112,7 +112,7 @@ function love.update(dt)
 
 	-- spawning items
 	item_accum = item_accum + dt
-	if item_accum >= item_timer then
+	if item_accum >= item_timer and #items < 25 then
 		item_accum = 0
 		table.insert(items, spawnItem(getRandomKey(ItemTypes), items))
 	end
