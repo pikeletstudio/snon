@@ -23,7 +23,7 @@ function love.load()
 	TIME = 0
 
 	-- fixed update settings
-	PAUSE = true
+	PAUSE = false
 	fixed_tick = 0.01 -- seconds
 	tick_accum = 0
 	
