@@ -5,8 +5,8 @@ EntityTypes = {
 	RED = {1, 0.7, 0.7, 1},
 	GREEN = {0.7, 1, 0.7, 1},
 	BLUE = {0.7, 0.7, 1, 1},
-	EMPTY = {1, 1, 1, 1},
-	FUEL = {1, 1, 0.8, 1}
+	EMPTY = {1, 1, 1, 0.7},
+	FUEL = {1, 1, 0.7, 1}
 }
 
 function Item.new(sprite, x, y, scale, rot, type)

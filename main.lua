@@ -6,7 +6,7 @@ require("player")
 function love.load()
 
 	math.randomseed(os.time())
-	love.graphics.setBackgroundColor(0.2, 0.1, 0.2, 1)
+	love.graphics.setBackgroundColor(0.1, 0.05, 0.1, 1)
 	love.graphics.setDefaultFilter("nearest")
 	screenW = love.graphics.getWidth() / 2
 	screenH = love.graphics.getHeight() / 2
