@@ -15,8 +15,10 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
-	instance.vx = math.random() *
-
+	instance.base_speed = 100
+	instance.vx = math.random() * instance.base_speed - instance.base_speed / 2
+	instance.vy = math.random() * instance.base_speed - instance.base_speed / 2
+	
 	instance.pickup_radius = instance.w / 2 * 5
 	instance.ready = true
 	instance.readyTimer = 0
@@ -78,6 +80,13 @@ function DropPoint:deposit(cell)
 	return true
 end
 
+function DropPoint:move(dx, dy)
+	self.x = self.x + dx
+	self.y = self.y + dy
+	if self.x
+
+end
+
 function DropPoint:update(dt)
 	if not self.ready then
 		self.colour = {1, 1, 1, 1}
@@ -95,7 +104,7 @@ function DropPoint:update(dt)
 			self:triggerFail()
 		end
 	end
-
+	self:move(self.vx * dt, self.vy * dt)
 end
 
 function DropPoint:triggerFail()
