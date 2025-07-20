@@ -106,7 +106,7 @@ function spawnItem(type, items, time)
 			size = math.random(1, 2)
 		elseif time > 60 and time < 120 then
 			size = math.random(1, 3)
-		else
+		elseif time > 120 then
 			size = math.random(3, 6)
 		end
 		return size
