@@ -177,7 +177,7 @@ end
 
 function FuelStation:draw()
 	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
-	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
 	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
 	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
@@ -219,7 +219,7 @@ end
 
 function Shipyard:draw()
 	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
-	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
 	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
 	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
