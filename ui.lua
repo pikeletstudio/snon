@@ -2,7 +2,7 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar.new(x, y, w, h, mode, colour)
+function ProgressBar.new(x, y, w, h, ox, oy, mode, colour)
 	local instance = setmetatable({}, ProgressBar)
 	if mode == nil then mode = "vertical" end
 	instance.mode = mode
@@ -10,18 +10,22 @@ function ProgressBar.new(x, y, w, h, mode, colour)
 	instance.y = y
 	instance.w = w
 	instance.h = h
+	instance.ox = ox
+	instance.oy = oy
 	if not colour then colour = {1, 1, 1, 1} end
 	instance.colour = colour
 	return instance
 end
 
 function ProgressBar:draw(progress, x, y)
+	if not x then self.x = x end
+	if not y then self.y = y end
 	love.graphics.setColor(self.colour)
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+	love.graphics.rectangle("line", self.x + self.ox, self.y + self.oy, self.w, self.h)
 	if self.mode == "vertical" then
-		love.graphics.rectangle("fill", self.x, self.y, self.w, self.h*progress)
+		love.graphics.rectangle("fill", self.x + self.ox, self.y + self.oy, self.w, self.h*progress)
 	else
-		love.graphics.rectangle("fill", self.x, self.y, self.w*progress, self.h)
+		love.graphics.rectangle("fill", self.x + self.ox, self.y + self.oy, self.w*progress, self.h)
 	end
 	love.graphics.setColor(1, 1, 1, 1)
 end

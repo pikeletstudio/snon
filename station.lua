@@ -28,16 +28,16 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.currentPoints = 0
 	instance.targetPoints = 1
 
-	instance.readyBar = ProgressBar.new(x, y, , 5, 12)
-	instance.patienceBar = ProgressBar.new(x - 20, y + 5, 5, 12)
+	instance.readyBar = ProgressBar.new(x, y, 20, 5, 5, 12)
+	instance.patienceBar = ProgressBar.new(x, y, -20, 5, 5, 12)
 	
 	return instance
 end
 
 function DropPoint:draw()
 	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 25)
-	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax)
-	self.patienceBar:draw(1 - self.patience / self.patienceMax)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
+	self.patienceBar:draw(1 - self.patience / self.patienceMax, self.x, self.y)
 	love.graphics.setColor(self.colour)
 	love.graphics.draw(self.sprite, 
 						self.x, -- love draws from the top left corner
