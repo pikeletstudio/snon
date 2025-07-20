@@ -75,7 +75,7 @@ function getRandomKey(t)
 	return keys[math.random(#keys)]
 end
 
-function spawnItem(type, items)
+function spawnItem(type, items, time)
 	function generatePosition()
 		border = 0.15
 		u = math.random(0, screenW * (1-border) * 2) + screenW * border
@@ -99,6 +99,8 @@ function spawnItem(type, items)
 		x, y = generatePosition()
 		valid = checkPosition(x, y)
 	end
+	
+	function 
 	
 	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
 	return Item.new(item_sprite, x, y, 1, math.random(-math.pi, math.pi), type)
