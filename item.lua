@@ -109,6 +109,7 @@ function spawnItem(type, items, time)
 		else
 			size = math.random(3, 6)
 		end
+		return size
 	end
 	
 	size = chooseSize(time)

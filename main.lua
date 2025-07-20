@@ -117,7 +117,7 @@ function love.update(dt)
 	if item_accum >= item_timer and #items < 25 then
 		item_accum = 0
 		
-		table.insert(items, spawnItem(getRandomKey(ItemTypes), items, time))
+		table.insert(items, spawnItem(getRandomKey(ItemTypes), items, TIME))
 	end
 
 	-- player collision with items
