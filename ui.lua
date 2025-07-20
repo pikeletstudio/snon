@@ -15,7 +15,7 @@ function ProgressBar.new(x, y, w, h, mode, colour)
 	return instance
 end
 
-function ProgressBar:draw(progress)
+function ProgressBar:draw(progress, x, y)
 	love.graphics.setColor(self.colour)
 	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 	if self.mode == "vertical" then
