@@ -46,6 +46,7 @@ function Player:checkBounds(x, y)
 	minX, minY = SCREEN_TRANSFORM:inverseTransformPoint(0, 0)
 	boundedX = math.max(math.min(x, maxX), minX)
 	boundedY = math.max(math.min(y, maxY), minY)
+	--if boundedX == maxX then boundedX = minX end
 	return boundedX, boundedY
 end
 
