@@ -18,8 +18,8 @@ function ProgressBar.new(x, y, w, h, ox, oy, mode, colour)
 end
 
 function ProgressBar:draw(progress, x, y)
-	if not x then self.x = x end
-	if not y then self.y = y end
+	if x then self.x = x end
+	if y then self.y = y end
 	love.graphics.setColor(self.colour)
 	love.graphics.rectangle("line", self.x + self.ox, self.y + self.oy, self.w, self.h)
 	if self.mode == "vertical" then
@@ -35,6 +35,6 @@ function drawEndScreen()
 	love.graphics.rectangle("fill", screenW*spx, screenH*spy, screenW*(1-spx)*2, screenH*(1-spy)*2)
 	love.graphics.setColor(0, 0, 0, 1)
 	love.graphics.print("Score: "..SCORE, screenW*spx*2, screenH*spy*2, 0, 5)
-	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.setColor(1, 1, 1, 0.5)
 end
 

@@ -15,7 +15,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
-	instance.base_speed = 50
+	instance.base_speed = math.random(20, 60)
 	instance.vx = math.random() * instance.base_speed - instance.base_speed / 2
 	instance.vy = math.random() * instance.base_speed - instance.base_speed / 2
 	
