@@ -1,7 +1,7 @@
 
 multi-point items - done
 improve balance of fuel use rate, credit gain, station requirement and timers
-make stations move/drift around
+make stations move/drift around - done
 change z-order of player cells
 
 
