@@ -116,16 +116,15 @@ function love.update(dt)
 	item_accum = item_accum + dt
 	if item_accum >= item_timer and #items < 25 then
 		item_accum = 0
+		
 		table.insert(items, spawnItem(getRandomKey(ItemTypes), items))
 	end
 
 	-- player collision with items
 	for i, item in pairs(items) do 
 		if item:checkCollision(player:getBBox()) then
-			-- player:grow(1)
-			collected = player:collect(item.type)
+			collected = player:collect(item)
 			if collected then table.remove(items, i) end
-
 		end
 	end
 

@@ -73,11 +73,13 @@ function Player:emptySegment(seg)
 	Player:fillSegment(seg, "EMPTY")
 end
 
-function Player:collect(item_type)
+function Player:collect(item)
 	-- if no empty cells, return
 	if #self.segments <= self.last_filled then return false end
-	self.last_filled = self.last_filled + 1
-	self:fillSegment(self.segments[self.last_filled], item_type)
+	for i = 1, item.points do 
+		self.last_filled = self.last_filled + 1
+		self:fillSegment(self.segments[self.last_filled], item.type)
+	end
 	return true
 end
 

@@ -9,7 +9,7 @@ EntityTypes = {
 	FUEL = {1, 1, 0.7, 1}
 }
 
-function Item.new(sprite, x, y, scale, rot, type)
+function Item.new(sprite, x, y, scale, rot, type, points)
 	local instance = setmetatable({}, Item)
 	instance.x = x
 	instance.y = y
@@ -20,6 +20,8 @@ function Item.new(sprite, x, y, scale, rot, type)
 	instance.scale = scale
 	instance.type = type
 	instance.colour = EntityTypes[instance.type]
+	if not points then points = 1 end
+	instance.points = points
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
