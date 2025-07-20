@@ -109,11 +109,12 @@ function spawnItem(type, items, time)
 		else
 			size = math.random(3, 6)
 		end
+	end
 	
 	size = chooseSize(time)
 	scale = 1 + size * 0.2
 	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
-	return Item.new(item_sprite, x, y, scale, math.random(-math.pi, math.pi), type)
+	return Item.new(item_sprite, x, y, scale, math.random(-math.pi, math.pi), type, size)
 end
 
 function checkBBoxCollision(u, v, a, b, x, y, w, h)
