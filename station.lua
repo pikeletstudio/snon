@@ -80,10 +80,18 @@ function DropPoint:deposit(cell)
 	return true
 end
 
+function DropPoint:checkBounds(x, y)
+	maxX, maxY = SCREEN_TRANSFORM:inverseTransformPoint(screenW * 2, screenH * 2)
+	minX, minY = SCREEN_TRANSFORM:inverseTransformPoint(0, 0)
+	boundedX = math.max(math.min(x, maxX), minX)
+	boundedY = math.max(math.min(y, maxY), minY)
+	return boundedX, boundedY
+end
+
 function DropPoint:move(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy
-	if self.x
+	if self.x 
 
 end
 
