@@ -100,10 +100,20 @@ function spawnItem(type, items, time)
 		valid = checkPosition(x, y)
 	end
 	
-	function 
+	function chooseSize(time)
+		size = 1
+		if time > 30 and time < 60 then
+			size = math.random(1, 2)
+		elseif time > 60 and time < 120 then
+			size = math.random(1, 3)
+		else
+			size = math.random(3, 6)
+		end
 	
+	size = chooseSize(time)
+	scale = 1 + size * 0.2
 	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
-	return Item.new(item_sprite, x, y, 1, math.random(-math.pi, math.pi), type)
+	return Item.new(item_sprite, x, y, scale, math.random(-math.pi, math.pi), type)
 end
 
 function checkBBoxCollision(u, v, a, b, x, y, w, h)
