@@ -46,9 +46,9 @@ function love.load()
 	
 	pfb_pos = 0.2 -- % of screen width in from left side
 	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80,
-																		screenW * (1-pfb_pos) * 2, 10,
-																		0, 0,
-																		"horizontal", EntityTypes.FUEL)
+										screenW * (1-pfb_pos) * 2, 10,
+										0, 0,
+										"horizontal", EntityTypes.FUEL)
 	
 	drop_points = {}
 	fuel_stations = {}
@@ -59,14 +59,18 @@ function love.load()
 		type = getKeys(ItemTypes)[d]
 		table.insert(drop_points, spawnStation(type, DropPoint, stations))
 	end
+	print("done 1")
 	
 	for f = 1, 2 do
 		table.insert(fuel_stations, spawnStation("FUEL", FuelStation, stations))
+		print("done 2."..f)
 	end
+	print("done 2")
 	
 	for s = 1, 1 do
 		table.insert(shipyards, spawnStation("EMPTY", Shipyard, stations))
 	end
+	print("done 3")
 end
 
 function love.draw()

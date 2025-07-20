@@ -1,8 +1,8 @@
 -- this is the config file, you can configure settings for the game window, input, etc
 
 function love.conf(t)
-	t.window.width = 800
-	t.window.height = 600
+	t.window.width = 1000
+	t.window.height = 800
 	-- t.window.resizable = true
 
 	t.window.title = "snon"
@@ -11,7 +11,7 @@ function love.conf(t)
 	t.modules.joystick = false
 	t.modules.physics = false
 
-	t.window.display = 1
+	t.window.display = 2
 
-	--t.console = true
+	-- t.console = true
 end

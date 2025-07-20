@@ -132,7 +132,7 @@ end
 
 function spawnStation(item_type, StationType, stations)
 	function generatePosition()
-		border = 0.35
+		border = 0
 		u = math.random(0, screenW * (1-border) * 2) + screenW * border
 		v = math.random(0, screenH * (1-border) * 2) + screenH * border
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
@@ -155,6 +155,7 @@ function spawnStation(item_type, StationType, stations)
 	while not valid do
 		x, y = generatePosition()
 		valid = checkPosition(x, y)
+		-- print(x, y, valid)
 	end
 
 	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
