@@ -45,7 +45,8 @@ function love.load()
 	player_grow_first = false
 	
 	pfb_pos = 0.2 -- % of screen width in from left side
-	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80, screenW * (1-pfb_pos) * 2, 10, "horizontal")
+	player_fuel_bar = ProgressBar.new(screenW * pfb_pos,
+80, screenW * (1-pfb_pos) * 2, 10,"horizontal")
 	
 	drop_points = {}
 	fuel_stations = {}
