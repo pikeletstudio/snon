@@ -28,8 +28,8 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.currentPoints = 0
 	instance.targetPoints = 1
 
-	instance.readyBar = ProgressBar.new(x, y, 20, 5, 5, 12)
-	instance.patienceBar = ProgressBar.new(x, y, -20, 5, 5, 12)
+	instance.readyBar = ProgressBar.new(x, y, 5, 12, 20, 5)
+	instance.patienceBar = ProgressBar.new(x, y, 5, 12, -20, 5)
 	
 	return instance
 end
