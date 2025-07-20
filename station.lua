@@ -15,6 +15,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
+	instance.vx = math.random() *
 
 	instance.pickup_radius = instance.w / 2 * 5
 	instance.ready = true
