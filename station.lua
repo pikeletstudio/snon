@@ -91,8 +91,15 @@ end
 function DropPoint:move(dx, dy)
 	self.x = self.x + dx
 	self.y = self.y + dy
-	if self.x 
-
+	boundedX, boundedY = self:checkBounds(self.x, self.y)
+	if math.abs(self.x) > math.abs(boundedX) then
+		self.x = boundedX
+		self.vx = - self.vx
+	end 
+	if math.abs(self.y) > math.abs(boundedY) then
+		self.y = boundedY
+		self.vy = - self.vy
+	end
 end
 
 function DropPoint:update(dt)
