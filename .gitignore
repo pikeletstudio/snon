@@ -1,41 +1,34 @@
-# Compiled Lua sources
-luac.out
-
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
-
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
+# --- Compiled Lua files ---
+*.luac
 *.out
-*.app
-*.i*86
-*.x86_64
-*.hex
 
+# --- LuaRocks (Lua package manager) ---
+/lua_modules/
+*.rock
+*.rockspec
+
+# --- IDE/Editor files ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# IntelliJ/CLion
+.idea/
+*.iml
+
+# Vim
+*.swp
+*.swo
+*.un~
+
+# --- OS-generated files ---
+.DS_Store
+Thumbs.db
+
+# --- Dependency directories ---
+deps/  # If using C modules (e.g., LuaJIT FFI)
+lib/   # Local libraries
+
+# --- Logs and temporary files ---
+*.log
+*.tmp

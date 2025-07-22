@@ -22,6 +22,9 @@ function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	instance.base_speed = 1.5 / fixed_tick
 	instance.speed_mod = 0
 	instance.moving = true
+	
+	instance.fuelMax = 30
+	instance.fuel = instance.fuelMax
 
 	return instance
 end
@@ -43,6 +46,7 @@ function Player:checkBounds(x, y)
 	minX, minY = SCREEN_TRANSFORM:inverseTransformPoint(0, 0)
 	boundedX = math.max(math.min(x, maxX), minX)
 	boundedY = math.max(math.min(y, maxY), minY)
+	--if boundedX == maxX then boundedX = minX end
 	return boundedX, boundedY
 end
 
@@ -70,11 +74,14 @@ function Player:emptySegment(seg)
 	Player:fillSegment(seg, "EMPTY")
 end
 
-function Player:collect(item_type)
+function Player:collect(item)
 	-- if no empty cells, return
 	if #self.segments <= self.last_filled then return false end
-	self.last_filled = self.last_filled + 1
-	self:fillSegment(self.segments[self.last_filled], item_type)
+	for i = 1, item.points do
+		self.last_filled = self.last_filled + 1
+		self:fillSegment(self.segments[self.last_filled], item.type)
+		if #self.segments <= self.last_filled then break end
+	end
 	return true
 end
 
@@ -86,36 +93,21 @@ function Player:getFirstFilled()
 end
 
 function Player:cycleCells(steps)
-	-- new_types = {}
-	-- for n, cell in pairs(self.segments) do
-	-- 	if (n-steps) then sign = 0 else sign = (n-steps) / math.abs((n-steps)) end
-	-- 	N = #self.segments * ((sign + 1) / 2)
-	-- 	print(N)
-	-- 	pos = math.abs(N - math.abs(n-steps) )
-	-- 	print(pos)
-	-- 	table.insert(new_types, pos, cell.type)
-	-- end
-	-- for n, cell in pairs(self.segments) do
-	-- 	cell.type = new_types[n]
-	-- 	print(new_types[n])
-	-- 	cell.colour = ItemTypes[cell.type]
-	-- end
 	t_cells = {}
 	for n, cell in pairs(self.segments) do
 		if cell.__index == TransportCell then
 			table.insert(t_cells, {n, cell.type})
 		end
 	end
+
 	for i = 1, #t_cells do
 		cell = self.segments[t_cells[i][1]]
 		new_pos = (i - steps) % #t_cells
 		if new_pos == 0 then new_pos = #t_cells end
 		new_type = t_cells[new_pos][2]
-		print(i..": "..cell.type.." -> "..new_pos..": "..new_type)
+		--print(i..": "..cell.type.." swaps with "..new_pos..": "..new_type)
 		cell.type = new_type
 	end
-
-
 end
 
 function Player:draw()
@@ -126,6 +118,8 @@ function Player:draw()
 end
 
 function Player:update(dt)
+	self.fuel = self.fuel - dt
+
 	local px = self.x
 	local py = self.y
 
@@ -266,7 +260,7 @@ function Segment.new(sprite, x, y, scale)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = "EMPTY"
-	instance.colour = ItemTypes[instance.type]
+	instance.colour = EntityTypes[instance.type]
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -298,7 +292,7 @@ function Segment:draw()
 end
 
 function Segment:update(x, y, rot)
-	self.colour = ItemTypes[self.type]
+	self.colour = EntityTypes[self.type]
 	-- save current position to path
 	table.insert(self.path, PathNode.new(self.x, self.y, self.rot))
 	
