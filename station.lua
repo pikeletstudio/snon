@@ -11,7 +11,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = type
-	instance.colour = EntityTypes[instance.type]
+	instance.colour = shallow_copy(EntityTypes[instance.type])
 
 	instance.ox = instance.w / 2
 	instance.oy = instance.h / 2
@@ -75,16 +75,18 @@ function DropPoint:deposit(cell)
 		self.patience = 0
 		self.ready = false
 		self.currentPoints = 0
+		prev_target = self.targetPoints
 		self.targetPoints = self.targetPoints + 1
+		return true, true, prev_target
 	end
-	return true
+	return true, false, nil
 end
 
 function DropPoint:checkBounds(x, y)
 	maxX, maxY = SCREEN_TRANSFORM:inverseTransformPoint(screenW * 2, screenH * 2)
 	minX, minY = SCREEN_TRANSFORM:inverseTransformPoint(0, 0)
-	boundedX = math.max(math.min(x, maxX), minX)
-	boundedY = math.max(math.min(y, maxY), minY)
+	boundedX = math.max(math.min(x, maxX - self.pickup_radius), minX + self.pickup_radius)
+	boundedY = math.max(math.min(y, maxY - self.pickup_radius), minY + self.pickup_radius)
 	return boundedX, boundedY
 end
 
@@ -104,13 +106,13 @@ end
 
 function DropPoint:update(dt)
 	if not self.ready then
-		self.colour = {1, 1, 1, 1}
+		self.colour[4] = 0.3
 		self.readyTimer = self.readyTimer + dt
 		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
 			self.readyTimerMax = 2
-			self.colour = ItemTypes[self.type]
+			self.colour[4] = 1
 		end
 
 	else
@@ -132,7 +134,7 @@ end
 
 function spawnStation(item_type, StationType, stations)
 	function generatePosition()
-		border = 0
+		border = 0.25
 		u = math.random(0, screenW * (1-border) * 2) + screenW * border
 		v = math.random(0, screenH * (1-border) * 2) + screenH * border
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
@@ -151,8 +153,12 @@ function spawnStation(item_type, StationType, stations)
 		return true
 	end
 
+	max_attempts = 10
+	a = 0
 	valid = false
 	while not valid do
+		a = a + 1
+		if a >= max_attempts then break end
 		x, y = generatePosition()
 		valid = checkPosition(x, y)
 		-- print(x, y, valid)
@@ -191,12 +197,12 @@ end
 
 function FuelStation:update(dt)
 	if not self.ready then
-		self.colour = {1, 1, 1, 1}
+		self.colour[4] = 0.3
 		self.readyTimer = self.readyTimer + dt
 		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
-			self.colour = EntityTypes[self.type]
+			self.colour[4] = 1
 		end
 	end
 end
@@ -233,12 +239,12 @@ end
 
 function Shipyard:update(dt)
 	if not self.ready then
-		self.colour = {1, 1, 1, 1}
+		self.colour[4] = 0.3
 		self.readyTimer = self.readyTimer + dt
 		if self.readyTimer >= self.readyTimerMax then
 			self.ready = true
 			self.readyTimer = 0
-			self.colour = EntityTypes[self.type]
+			self.colour[4] = 1
 		end
 	end
 end

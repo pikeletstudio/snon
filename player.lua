@@ -22,6 +22,8 @@ function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
 	instance.base_speed = 1.5 / fixed_tick
 	instance.speed_mod = 0
 	instance.moving = true
+	instance.boost = false
+	instance.brake = false
 	
 	instance.fuelMax = 30
 	instance.fuel = instance.fuelMax
@@ -111,14 +113,16 @@ function Player:cycleCells(steps)
 end
 
 function Player:draw()
-	for n, seg in pairs(self.segments) do
-		seg:draw()
+	for s = #self.segments, 1, -1 do
+		self.segments[s]:draw()
 		-- drawBBox("circle", seg:getBBox("circle"))
 	end
 end
 
 function Player:update(dt)
-	self.fuel = self.fuel - dt
+	if self.boost or self.brake then using_move_action = 1 else using_move_action = 0 end
+	fuel_use_mod = 1
+	self.fuel = self.fuel - dt * (1 + fuel_use_mod * using_move_action)
 
 	local px = self.x
 	local py = self.y
@@ -150,10 +154,14 @@ function Player:takeInput(dt)
 
 	if love.keyboard.isDown("lshift") then
 		self.speed_mod = self.base_speed * 0.4
+		self.boost = true
 	elseif love.keyboard.isDown("space") then
 		self.speed_mod = - self.base_speed * 0.35
+		self.brake = true
 	else
 		self.speed_mod = 0
+		self.boost = false
+		self.brake = false
 	end
 end
 

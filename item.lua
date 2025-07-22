@@ -19,7 +19,7 @@ function Item.new(sprite, x, y, scale, rot, type, points)
 	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = type
-	instance.colour = EntityTypes[instance.type]
+	instance.colour = shallow_copy(EntityTypes[instance.type])
 	if not points then points = 1 end
 	instance.points = points
 

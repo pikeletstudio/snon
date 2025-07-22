@@ -1,3 +1,4 @@
+require("utils")
 require("item")
 require("station")
 require("ui")
@@ -22,9 +23,13 @@ function love.load()
 	GAMEOVER = false
 	TIME = 0
 
+	score_sprite = love.graphics.newImage("assets/score_text.png")
+	credits_sprite = love.graphics.newImage("assets/credits_text.png")
+	game_over_sprite = love.graphics.newImage("assets/game_over_text.png")
+
 	-- fixed update settings
 	PAUSE = false
-	fixed_tick = 0.01 -- seconds
+	fixed_tick = 0.015 -- seconds
 	tick_accum = 0
 	
 	item_timer = 2 -- seconds
@@ -70,8 +75,6 @@ function love.load()
 end
 
 function love.draw()
-	love.graphics.print("SCORE: "..SCORE, 20, 20, 0, 1.25)
-	love.graphics.print("CREDITS: "..CREDITS, 20, 40, 0, 1.25)
 	--love.graphics.print(printCells(), 20, 40, 0)
 	--love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
 	player_fuel_bar:draw(player.fuel / player.fuelMax)
@@ -91,10 +94,16 @@ function love.draw()
 		do sy:draw() drawBBox("circle", sy:getDepositBBox("circle"), sy.colour) end
 
 	love.graphics.pop()
-	if GAMEOVER then drawEndScreen() end
+	if GAMEOVER then drawEndScreen(game_over_sprite) end
+	
+	love.graphics.draw(score_sprite, 20, 20)
+	love.graphics.print(SCORE, 20 + score_sprite:getWidth() + 10, 20 - 3, 0, 1.5)
+	love.graphics.draw(credits_sprite, 20, 40)
+	love.graphics.print(CREDITS, 20 + credits_sprite:getWidth() + 10, 40 - 3, 0, 1.5)
 end
 
 function love.update(dt)
+	if GAMEOVER then PAUSE = true end
 	if player.fuel <= 0 then endGame() end
 	if PAUSE then return end
 	
@@ -135,13 +144,16 @@ function love.update(dt)
 
 		if dp.ready and dp:checkDeposit(player:getBBox("circle")) then
 			seg = player:getFirstFilled()
-			if dp:deposit(seg) then
-				SCORE = SCORE + 1
+			deposit_success, quota_success, prev_quota = dp:deposit(seg)
+			if deposit_success then
+				if quota_success then 
+					SCORE = SCORE + 1
+					CREDITS = CREDITS + prev_quota * 5
+				end
 				CREDITS = CREDITS + 10
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
 				player:cycleCells(-1)
-				--player:grow(1)
 			end
 		end
 	end
@@ -214,10 +226,4 @@ function printCells()
 		text = text.."("..n.." "..cell.type..")"
 	end
 	return text
-end
-
-function printTable(t)
-	for k, v in pairs(t) do
-		print(tostring(k)..": "..tostring(v))
-	end
 end
