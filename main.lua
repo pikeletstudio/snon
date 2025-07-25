@@ -219,9 +219,9 @@ function love.keypressed(key, scancode, isrepeat)
 		PAUSE = not PAUSE
 	end
 		
-	if key == "s" then
-		player:grow(1)
-	end
+	-- if key == "s" then
+	-- 	player:grow(1)
+	-- end
 end
 
 function love.mousepressed(x, y, button, istouch, presses)

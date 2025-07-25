@@ -5,7 +5,7 @@ function love.conf(t)
 	t.window.height = 800
 	-- t.window.resizable = true
 
-	t.window.title = "snon"
+	t.window.title = "SNUCK"
 
 	-- turning off these modules to save memory as they are not being used
 	t.modules.joystick = false
@@ -13,5 +13,5 @@ function love.conf(t)
 
 	t.window.display = 1
 
-	t.console = true
+	-- t.console = true
 end
