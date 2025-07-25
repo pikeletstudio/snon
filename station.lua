@@ -18,6 +18,7 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.base_speed = math.random(20, 60)
 	instance.vx = math.random() * instance.base_speed - instance.base_speed / 2
 	instance.vy = math.random() * instance.base_speed - instance.base_speed / 2
+	instance.vr = (math.random(0, 1) * 2 - 1) * (math.abs(instance.vx) + math.abs(instance.vy)) / (2 * instance.base_speed) * 0.03
 	
 	instance.pickup_radius = instance.w / 2 * 5
 	instance.ready = true
@@ -28,14 +29,16 @@ function DropPoint.new(sprite, x, y, scale, rot, type)
 	instance.currentPoints = 0
 	instance.targetPoints = 1
 
-	instance.readyBar = ProgressBar.new(x, y, 5, 12, 20, 5)
-	instance.patienceBar = ProgressBar.new(x, y, 5, 12, -20, 5)
+	barWidth, barHeight = 5, 12
+	instance.readyBar = ProgressBar.new(x, y, barWidth, barHeight, (instance.w), -6, instance.colour, "vertical", true)
+	instance.patienceBar = ProgressBar.new(x, y, barWidth, barHeight, -(instance.w + barWidth), -6, instance.colour, "vertical", true)
 	
 	return instance
 end
 
 function DropPoint:draw()
-	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 25)
+	love.graphics.print(self.currentPoints, self.x - 4, self.y - 30)
+	love.graphics.print("/ "..self.targetPoints, self.x + 10, self.y - 25, 0, 0.5)
 	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
 	self.patienceBar:draw(1 - self.patience / self.patienceMax, self.x, self.y)
 	love.graphics.setColor(self.colour)
@@ -74,9 +77,7 @@ function DropPoint:deposit(cell)
 	if self.currentPoints == self.targetPoints then
 		self.patience = 0
 		self.ready = false
-		self.currentPoints = 0
 		prev_target = self.targetPoints
-		self.targetPoints = self.targetPoints + 1
 		return true, true, prev_target
 	end
 	return true, false, nil
@@ -112,6 +113,8 @@ function DropPoint:update(dt)
 			self.ready = true
 			self.readyTimer = 0
 			self.readyTimerMax = 2
+			self.currentPoints = 0
+			self.targetPoints = self.targetPoints + 1
 			self.colour[4] = 1
 		end
 
@@ -132,9 +135,112 @@ end
 
 ----
 
+FuelStation = {}
+FuelStation.__index = FuelStation
+setmetatable(FuelStation, DropPoint)
+
+function FuelStation.new(sprite, x, y, scale, rot, type)
+	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	instance.readyTimerMax = 6
+	instance.cost = 10
+	instance.vr = (math.random(0, 1) * 2 - 1) * (math.abs(instance.vx) + math.abs(instance.vy)) / (2 * instance.base_speed) * 0.01
+	setmetatable(instance, FuelStation)
+	return instance
+end
+
+function FuelStation:draw()
+	love.graphics.print("¢ "..self:getCost(), self.x - 10, self.y - 25, 0, 0.75)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
+	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
+	love.graphics.setColor(self.colour)
+	love.graphics.draw(self.sprite, 
+						self.x, -- love draws from the top left corner
+						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
+						self.rot, self.scale, self.scale,
+						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
+end
+
+function FuelStation:update(dt)
+	self.rot = self.rot + self.vr
+	if not self.ready then
+		self.colour[4] = 0.3
+		self.readyTimer = self.readyTimer + dt
+		if self.readyTimer >= self.readyTimerMax then
+			self.ready = true
+			self.readyTimer = 0
+			self.colour[4] = 1
+		end
+	end
+end
+
+function FuelStation:refill()
+	self.ready = false
+	self.cost = self.cost + 1
+end
+
+function FuelStation:getCost()
+	round_to = 5
+	return math.floor(self.cost / round_to) * round_to
+end
+
+----
+
+Shipyard = {}
+Shipyard.__index = Shipyard
+setmetatable(Shipyard, DropPoint)
+
+function Shipyard.new(sprite, x, y, scale, rot, type)
+	instance = DropPoint.new(sprite, x, y, scale, rot, type)
+	instance.readyTimerMax = 12
+	instance.displayPoints = false
+	instance.cost = 40
+	instance.vr = (math.random(0, 1) * 2 - 1) * (math.abs(instance.vx) + math.abs(instance.vy)) / (2 * instance.base_speed) * 0.005
+	setmetatable(instance, Shipyard)
+	return instance
+end
+
+function Shipyard:draw()
+	love.graphics.print("¢ "..self:getCost(), self.x - 10, self.y - 25, 0, 0.75)
+	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
+	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
+	love.graphics.setColor(self.colour)
+	love.graphics.draw(self.sprite, 
+						self.x, -- love draws from the top left corner
+						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
+						self.rot, self.scale, self.scale,
+						self.ox, self.oy)
+	love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Shipyard:update(dt)
+	self.rot = self.rot + self.vr
+	if not self.ready then
+		self.colour[4] = 0.3
+		self.readyTimer = self.readyTimer + dt
+		if self.readyTimer >= self.readyTimerMax then
+			self.ready = true
+			self.readyTimer = 0
+			self.colour[4] = 1
+		end
+	end
+end
+
+function Shipyard:refill()
+	self.ready = false
+	self.cost = self.cost + 5
+end
+
+function Shipyard:getCost()
+	round_to = 10
+	return math.floor(self.cost / round_to) * round_to
+end
+
+----
+
 function spawnStation(item_type, StationType, stations)
 	function generatePosition()
-		border = 0.25
+		border = 0.27
 		u = math.random(0, screenW * (1-border) * 2) + screenW * border
 		v = math.random(0, screenH * (1-border) * 2) + screenH * border
 		x, y = SCREEN_TRANSFORM:inverseTransformPoint(u, v)
@@ -153,7 +259,7 @@ function spawnStation(item_type, StationType, stations)
 		return true
 	end
 
-	max_attempts = 10
+	max_attempts = 20
 	a = 0
 	valid = false
 	while not valid do
@@ -161,7 +267,6 @@ function spawnStation(item_type, StationType, stations)
 		if a >= max_attempts then break end
 		x, y = generatePosition()
 		valid = checkPosition(x, y)
-		-- print(x, y, valid)
 	end
 
 	station_sprite = love.graphics.newImage("assets/droppoint_empty.png")
@@ -170,85 +275,3 @@ end
 
 
 ----
-
-FuelStation = {}
-FuelStation.__index = FuelStation
-setmetatable(FuelStation, DropPoint)
-
-function FuelStation.new(sprite, x, y, scale, rot, type)
-	instance = DropPoint.new(sprite, x, y, scale, rot, type)
-	instance.readyTimerMax = 6
-	setmetatable(instance, FuelStation)
-	return instance
-end
-
-function FuelStation:draw()
-	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
-	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
-	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
-	love.graphics.setColor(self.colour)
-	love.graphics.draw(self.sprite, 
-						self.x, -- love draws from the top left corner
-						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
-						self.rot, self.scale, self.scale,
-						self.ox, self.oy)
-	love.graphics.setColor(1, 1, 1, 1)
-end
-
-function FuelStation:update(dt)
-	if not self.ready then
-		self.colour[4] = 0.3
-		self.readyTimer = self.readyTimer + dt
-		if self.readyTimer >= self.readyTimerMax then
-			self.ready = true
-			self.readyTimer = 0
-			self.colour[4] = 1
-		end
-	end
-end
-
-function FuelStation:refill()
-	self.ready = false
-end
-
-----
-
-Shipyard = {}
-Shipyard.__index = Shipyard
-setmetatable(Shipyard, DropPoint)
-
-function Shipyard.new(sprite, x, y, scale, rot, type)
-	instance = DropPoint.new(sprite, x, y, scale, rot, type)
-	instance.readyTimerMax = 12
-	setmetatable(instance, Shipyard)
-	return instance
-end
-
-function Shipyard:draw()
-	love.graphics.print(self.targetPoints - self.currentPoints, self.x, self.y - 20)
-	self.readyBar:draw(1 - self.readyTimer / self.readyTimerMax, self.x, self.y)
-	--self.patienceBar:draw(1 - self.patience / self.patienceMax)
-	love.graphics.setColor(self.colour)
-	love.graphics.draw(self.sprite, 
-						self.x, -- love draws from the top left corner
-						self.y, -- pos x is rightward, pos y is downward, with (0, 0) in the top left corner
-						self.rot, self.scale, self.scale,
-						self.ox, self.oy)
-	love.graphics.setColor(1, 1, 1, 1)
-end
-
-function Shipyard:update(dt)
-	if not self.ready then
-		self.colour[4] = 0.3
-		self.readyTimer = self.readyTimer + dt
-		if self.readyTimer >= self.readyTimerMax then
-			self.ready = true
-			self.readyTimer = 0
-			self.colour[4] = 1
-		end
-	end
-end
-
-function Shipyard:refill()
-	self.ready = false
-end

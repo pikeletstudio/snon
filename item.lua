@@ -6,7 +6,7 @@ EntityTypes = {
 	GREEN = {0.7, 1, 0.7, 1},
 	BLUE = {0.7, 0.7, 1, 1},
 	EMPTY = {1, 1, 1, 0.7},
-	FUEL = {1, 1, 0.7, 1}
+	FUEL = {0.87, 0.95, 0.6, 1}
 }
 
 function Item.new(sprite, x, y, scale, rot, type, points)
@@ -114,7 +114,7 @@ function spawnItem(type, items, time)
 	
 	size = chooseSize(time)
 	scale = 1 + size * 0.2
-	item_sprite = love.graphics.newImage("assets/pickup_blue.png")
+	item_sprite = love.graphics.newImage("assets/pickup_empty.png")
 	return Item.new(item_sprite, x, y, scale, math.random(-math.pi, math.pi), type, size)
 end
 

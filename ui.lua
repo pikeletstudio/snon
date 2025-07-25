@@ -2,10 +2,8 @@
 ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
-function ProgressBar.new(x, y, w, h, ox, oy, mode, colour)
+function ProgressBar.new(x, y, w, h, ox, oy, colour, mode, flipped)
 	local instance = setmetatable({}, ProgressBar)
-	if mode == nil then mode = "vertical" end
-	instance.mode = mode
 	instance.x = x
 	instance.y = y
 	instance.w = w
@@ -14,19 +12,38 @@ function ProgressBar.new(x, y, w, h, ox, oy, mode, colour)
 	instance.oy = oy
 	if not colour then colour = {1, 1, 1, 1} end
 	instance.colour = colour
+	if mode == nil then mode = "vertical" end
+	instance.mode = mode
+	instance.flipped = flipped
 	return instance
 end
 
 function ProgressBar:draw(progress, x, y)
+	-- update position
 	if x then self.x = x end
 	if y then self.y = y end
+
 	love.graphics.setColor(self.colour)
+	-- draw outline
 	love.graphics.rectangle("line", self.x + self.ox, self.y + self.oy, self.w, self.h)
+	
+	x, y = self.x + self.ox, self.y + self.oy
+	width, height = self.w * progress, self.h
+
+	if self.flipped then f = 1 else f = 0 end
+	flip_offset = self.w * (1 - progress) * f
+
 	if self.mode == "vertical" then
-		love.graphics.rectangle("fill", self.x + self.ox, self.y + self.oy, self.w, self.h*progress)
+		height = self.h * progress
+		width = self.w
+		flip_offset = self.h * (1 - progress) * f
+		y = y + flip_offset
 	else
-		love.graphics.rectangle("fill", self.x + self.ox, self.y + self.oy, self.w*progress, self.h)
+		x = x + flip_offset
 	end
+
+	-- draw inner bar
+	love.graphics.rectangle("fill", x, y, width, height)
 	love.graphics.setColor(1, 1, 1, 1)
 end
 

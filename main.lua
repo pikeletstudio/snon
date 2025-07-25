@@ -7,12 +7,20 @@ require("player")
 function love.load()
 
 	math.randomseed(os.time())
-	love.graphics.setBackgroundColor(0.1, 0.05, 0.1, 1)
+	love.graphics.setBackgroundColor(0, 0, 0, 1)
 	love.graphics.setDefaultFilter("nearest")
+	love.graphics.setNewFont(10, "normal", 4)
+
 	screenW = love.graphics.getWidth() / 2
 	screenH = love.graphics.getHeight() / 2
 	screenScale = 2
 
+	shader_glow = love.graphics.newShader("shader_glow.fs")
+	shader_crt = love.graphics.newShader("shader_crt.fs")
+	shader_vars = {} --{screenDims = {screenW, screenH}}
+
+	canvas = love.graphics.newCanvas()
+	canvas2 = love.graphics.newCanvas()
 
 	SCREEN_TRANSFORM = love.math.newTransform()
 	SCREEN_TRANSFORM:scale(screenScale, screenScale)
@@ -23,6 +31,10 @@ function love.load()
 	GAMEOVER = false
 	TIME = 0
 
+	score_text_x = 35
+	score_text_y = 45
+	credits_text_x = score_text_x
+	credits_text_y = score_text_y + 20
 	score_sprite = love.graphics.newImage("assets/score_text.png")
 	credits_sprite = love.graphics.newImage("assets/credits_text.png")
 	game_over_sprite = love.graphics.newImage("assets/game_over_text.png")
@@ -49,65 +61,73 @@ function love.load()
 	player = Player.new(fixed_tick, player_sprite_head, player_sprite_body, 0, 0, 1)
 	player_grow_first = false
 	
-	pfb_pos = 0.2 -- % of screen width in from left side
-	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 80,
-										screenW * (1-pfb_pos) * 2, 10,
+	pfb_pos = 0.05 -- % of screen width in from left side
+	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 20,
+										screenW * (1-pfb_pos) * 2, 15,
 										0, 0,
-										"horizontal", EntityTypes.FUEL)
+										EntityTypes.FUEL, "horizontal")
 	
 	drop_points = {}
 	fuel_stations = {}
 	shipyards = {}
 	stations = {drop_points, fuel_stations, shipyards}
-
-	for d = 1, 3 do
-		type = getKeys(ItemTypes)[d]
-		table.insert(drop_points, spawnStation(type, DropPoint, stations))
-	end
+	loadStations()
 	
-	for f = 1, 2 do
-		table.insert(fuel_stations, spawnStation("FUEL", FuelStation, stations))
-	end
-	
-	for s = 1, 1 do
-		table.insert(shipyards, spawnStation("EMPTY", Shipyard, stations))
-	end
 end
 
 function love.draw()
-	--love.graphics.print(printCells(), 20, 40, 0)
-	--love.graphics.print("len: "..player.length.." segs: "..#player.segments.." last: "..player.last_filled, 20, 60, 0)
-	player_fuel_bar:draw(player.fuel / player.fuelMax)
+	-- set draw target to canvas
+	love.graphics.setCanvas(canvas)
+	love.graphics.clear(0.15, 0.05, 0.15, 1)
+
+	-- appaly screen transform
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
-	-- love.graphics.rectangle("fill", 0, 0, 1, 1)
+	-- draw to canvas
 	player:draw()
-	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
-	for i, dp in pairs(drop_points) 
-		do dp:draw() drawBBox("circle", dp:getDepositBBox("circle"), dp.colour) end
+	drawStations()
 	
-	for i, fs in pairs(fuel_stations) 
-		do fs:draw() drawBBox("circle", fs:getDepositBBox("circle"), fs.colour) end
-	
-	for i, sy in pairs(shipyards) 
-		do sy:draw() drawBBox("circle", sy:getDepositBBox("circle"), sy.colour) end
-
+	-- stop applying screen transform
 	love.graphics.pop()
+
+	-- draw UI outside of screen transform
+	player_fuel_bar:draw(player.fuel / player.fuelMax)
+	drawStats()
+	-- love.graphics.setShader()
+
+	-- set draw target to screen
+	love.graphics.setCanvas()
+	
+	-- for k, v in pairs(shader_vars) do shader_crt:send(k, v) end
+
+	-- set new canvas for glow shader
+	love.graphics.setCanvas(canvas2)
+
+	-- apply crt shader and draw canvas to glow shader canvas
+	love.graphics.setShader(shader_crt)
+	love.graphics.draw(canvas)
+	love.graphics.setShader()
+
+	love.graphics.setCanvas()
+	
+	-- apply glow shader
+	love.graphics.setShader(shader_glow)
+	love.graphics.draw(canvas2)
+	love.graphics.setShader()
+
+	-- draw game over screen
 	if GAMEOVER then drawEndScreen(game_over_sprite) end
 	
-	love.graphics.draw(score_sprite, 20, 20)
-	love.graphics.print(SCORE, 20 + score_sprite:getWidth() + 10, 20 - 3, 0, 1.5)
-	love.graphics.draw(credits_sprite, 20, 40)
-	love.graphics.print(CREDITS, 20 + credits_sprite:getWidth() + 10, 40 - 3, 0, 1.5)
 end
 
-function love.update(dt)
+function love.update(dt)	
 	if GAMEOVER then PAUSE = true end
 	if player.fuel <= 0 then endGame() end
 	if PAUSE then return end
 	
 	TIME = TIME + dt
+	-- shader_vars.time = math.abs(math.mod(TIME, 2) - 1)
 	if TIME > 0.1 then
 		if not player_grow_first then
 			player:grow(1)
@@ -148,9 +168,9 @@ function love.update(dt)
 			if deposit_success then
 				if quota_success then 
 					SCORE = SCORE + 1
-					CREDITS = CREDITS + prev_quota * 5
+					CREDITS = CREDITS + prev_quota * 10
 				end
-				CREDITS = CREDITS + 10
+				CREDITS = CREDITS + 5
 				player:emptySegment(seg)
 				player.last_filled = player.last_filled - 1
 				player:cycleCells(-1)
@@ -162,8 +182,8 @@ function love.update(dt)
 	for i, fs in pairs(fuel_stations) do 
 		fs:update(dt)
 		if fs.ready and fs:checkDeposit(player:getBBox("circle")) then
-			if CREDITS >= 10 then
-				CREDITS = CREDITS - 10
+			if CREDITS >= fs:getCost() then
+				CREDITS = CREDITS - fs:getCost()
 				player.fuel = player.fuel + player.fuelMax * 0.2
 				fs:refill()
 			end
@@ -174,8 +194,8 @@ function love.update(dt)
 	for i, sy in pairs(shipyards) do 
 		sy:update(dt)
 		if sy.ready and sy:checkDeposit(player:getBBox("circle")) then
-			if CREDITS >= 50 then
-				CREDITS = CREDITS - 50
+			if CREDITS >= sy:getCost() then
+				CREDITS = CREDITS - sy:getCost()
 				player:grow(1)
 				sy:refill()
 			end
@@ -226,4 +246,38 @@ function printCells()
 		text = text.."("..n.." "..cell.type..")"
 	end
 	return text
+end
+
+function drawStations()
+	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
+	for i, dp in pairs(drop_points) 
+		do dp:draw() drawBBox("circle", dp:getDepositBBox("circle"), dp.colour) end
+	
+	for i, fs in pairs(fuel_stations) 
+		do fs:draw() drawBBox("circle", fs:getDepositBBox("circle"), fs.colour) end
+	
+	for i, sy in pairs(shipyards) 
+		do sy:draw() drawBBox("circle", sy:getDepositBBox("circle"), sy.colour) end
+end
+
+function drawStats()
+	love.graphics.draw(score_sprite, score_text_x, score_text_y)
+	love.graphics.print(SCORE, score_text_x + credits_sprite:getWidth() + 20, score_text_y, 0, 1.5)
+	love.graphics.draw(credits_sprite, credits_text_x, credits_text_y)
+	love.graphics.print("¢ "..CREDITS, credits_text_x + credits_sprite:getWidth() + 20, credits_text_y, 0, 1.5)
+end
+
+function loadStations()
+	for f = 1, 2 do
+		table.insert(fuel_stations, spawnStation("FUEL", FuelStation, stations))
+	end
+	
+	for s = 1, 1 do
+		table.insert(shipyards, spawnStation("EMPTY", Shipyard, stations))
+	end
+
+	for d = 1, 3 do
+		type = getKeys(ItemTypes)[d]
+		table.insert(drop_points, spawnStation(type, DropPoint, stations))
+	end
 end
