@@ -59,18 +59,14 @@ function love.load()
 		type = getKeys(ItemTypes)[d]
 		table.insert(drop_points, spawnStation(type, DropPoint, stations))
 	end
-	print("done 1")
 	
 	for f = 1, 2 do
 		table.insert(fuel_stations, spawnStation("FUEL", FuelStation, stations))
-		print("done 2."..f)
 	end
-	print("done 2")
 	
 	for s = 1, 1 do
 		table.insert(shipyards, spawnStation("EMPTY", Shipyard, stations))
 	end
-	print("done 3")
 end
 
 function love.draw()
@@ -82,7 +78,7 @@ function love.draw()
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
-	love.graphics.rectangle("fill", 0, 0, 1, 1)
+	-- love.graphics.rectangle("fill", 0, 0, 1, 1)
 	player:draw()
 	for i, item in pairs(items) do item:draw() end -- drawBBox("circle", item:getBBox("circle")) end
 	for i, dp in pairs(drop_points) 
