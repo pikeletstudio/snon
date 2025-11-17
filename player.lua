@@ -107,7 +107,6 @@ function Player:cycleCells(steps)
 		new_pos = (i - steps) % #t_cells
 		if new_pos == 0 then new_pos = #t_cells end
 		new_type = t_cells[new_pos][2]
-		--print(i..": "..cell.type.." swaps with "..new_pos..": "..new_type)
 		cell.type = new_type
 	end
 end

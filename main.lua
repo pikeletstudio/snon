@@ -80,7 +80,7 @@ function love.draw()
 	love.graphics.setCanvas(canvas)
 	love.graphics.clear(0.15, 0.05, 0.15, 1)
 
-	-- appaly screen transform
+	-- apply screen transform
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
