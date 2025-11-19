@@ -1,22 +1,27 @@
+require("spritestack")
 
 Player = {}
 Player.__index = Player
 
 
-function Player.new(fixed_tick, head_sprite, body_sprite, x, y, scale)
-	local instance = setmetatable({}, Player) 
+function Player.new(fixed_tick, texture_atlas, sprite_batch, x, y, scale)
+	local instance = setmetatable({}, Player)
 	instance.x = x
 	instance.y = y
 	instance.vx = 0
 	instance.vy = 0
 	instance.rot = 0
 	instance.scale = scale
-
-	instance.segments = {Segment.new(head_sprite, x, y, scale)}
-	instance.body_sprite = body_sprite
+	
+	instance.texture_atlas = texture_atlas
+	instance.sprite_batch = sprite_batch
+	
+	head = Segment.new(texture_atlas, sprite_batch, x, y, scale)
+	head.sprite_stack = Segment.createSpriteStack(texture_atlas, sprite_batch, "head", instance.x, instance.y, scale)
+	instance.segments = {head}
 	instance.length = #instance.segments
 	instance.last_filled = 1
-	instance.spacing = 5
+	instance.spacing = 7
 	instance.fixed_tick = fixed_tick
 
 	instance.base_speed = 1.5 / fixed_tick
@@ -64,7 +69,7 @@ function Player:addBodySegments(num_segments)
 		x = prev.x - prev.w
 		y = prev.y
 		prev:clearPath(self.spacing)
-		table.insert(self.segments, TransportCell.new(self.body_sprite, x, y, self.scale))
+		table.insert(self.segments, TransportCell.new(self.texture_atlas, self.sprite_batch, x, y, self.scale))
 	end
 end
 
@@ -113,7 +118,8 @@ end
 
 function Player:draw()
 	for s = #self.segments, 1, -1 do
-		self.segments[s]:draw()
+		-- self.segments[s]:draw()
+		self.segments[s]:draw_stack()
 		-- drawBBox("circle", seg:getBBox("circle"))
 	end
 end
@@ -258,19 +264,14 @@ Segment = {}
 Segment.__index = Segment
 
 
-function Segment.new(sprite, x, y, scale)
+function Segment.new(texture_atlas, sprite_batch, x, y, scale)
 	local instance = setmetatable({}, Segment) 
 	instance.sprite = sprite
 	instance.x = x
 	instance.y = y
-	instance.w = sprite:getWidth() * scale
-	instance.h = sprite:getHeight() * scale
 	instance.scale = scale
 	instance.type = "EMPTY"
 	instance.colour = EntityTypes[instance.type]
-
-	instance.ox = instance.w / 2
-	instance.oy = instance.h / 2
 
 	instance.vx = 0
 	instance.vy = 0
@@ -278,7 +279,30 @@ function Segment.new(sprite, x, y, scale)
 
 	instance.path = {}
 
+	instance.sprite_stack = Segment.createSpriteStack(texture_atlas, sprite_batch, "body", instance.x, instance.y, scale)
+
+	instance.w = instance.sprite_stack:getWidth() * scale
+	instance.h = instance.sprite_stack:getHeight() * scale
+
+	instance.ox = instance.w / 2
+	instance.oy = instance.h / 2
+
+	instance.sprite_stack_item = Segment.createSpriteStack(texture_atlas, BATCH2, "item", instance.x, instance.y, scale, modulate)
+
 	return instance
+end
+
+function Segment.createSpriteStack(texture_atlas, sprite_batch, body_or_item, x, y, scale)
+	local sprite_stack = SpriteStack.new(0.1, scale, 0.6, scale)
+	if body_or_item == "body" then
+		sprite_stack:load_from_atlas(texture_atlas, 0, 0, 16, 10, 1, 6, sprite_batch)
+	elseif body_or_item == "head" then
+		sprite_stack:load_from_atlas(texture_atlas, 0, 16, 16, 10, 1, 6, sprite_batch)
+	else
+		sprite_stack:load_from_atlas(texture_atlas, 0, 10 + 1, 12, 4, 1, 6, sprite_batch)
+	end
+	sprite_stack:set_position(x, y)
+	return sprite_stack
 end
 
 function Segment:getBBox(mode)
@@ -298,6 +322,18 @@ function Segment:draw()
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
+function Segment:draw_stack()
+	self.sprite_stack.x = self.x
+	self.sprite_stack.y = self.y
+	self.sprite_stack.rotation = self.rot
+	self.sprite_stack:add_to_batch()
+	if self.type == "EMPTY" then return end
+	self.sprite_stack_item.x = self.x
+	self.sprite_stack_item.y = self.y
+	self.sprite_stack_item.rotation = self.rot
+	self.sprite_stack_item:add_to_batch()
+end
+
 function Segment:update(x, y, rot)
 	self.colour = EntityTypes[self.type]
 	-- save current position to path
@@ -306,6 +342,9 @@ function Segment:update(x, y, rot)
 	self.x = x
 	self.y = y
 	self.rot = rot
+	screenW = love.graphics.getWidth() / 2
+	screenH = love.graphics.getHeight() / 2
+	self.sprite_stack:set_perspective(-self.x / screenW * 6, -self.y / screenH * 6)
 end
 
 function Segment:clearPath(keep)
@@ -328,8 +367,8 @@ TransportCell = {}
 TransportCell.__index = TransportCell
 setmetatable(TransportCell, Segment)
 
-function TransportCell.new(sprite, x, y, scale)
-	local instance = Segment.new(sprite, x, y, scale)
+function TransportCell.new(texture_atlas, sprite_batch, x, y, scale)
+	local instance = Segment.new(texture_atlas, sprite_batch, x, y, scale)
 	setmetatable(instance, TransportCell)
 	return instance
 end

@@ -56,16 +56,18 @@ function love.load()
 		ItemTypes[type] = EntityTypes[type]
 	end
 
-	player_sprite_head = love.graphics.newImage("assets/player_head.png")
-	player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
-	player = Player.new(fixed_tick, player_sprite_head, player_sprite_body, 0, 0, 1)
-	player_grow_first = false
+	ATLAS = love.graphics.newImage("assets/spritestacks/texture_atlas.png")
+	BATCH = LayeredSpriteBatch.new(ATLAS)
+	BATCH2 = LayeredSpriteBatch.new(ATLAS)
+
+	-- player_sprite_head = love.graphics.newImage("assets/player_head.png")
+	-- player_sprite_body = love.graphics.newImage("assets/player_body_empty.png")
+	player = Player.new(fixed_tick, ATLAS, BATCH, 0, 0, 1)
+	player_grow_first = true
 	
 	pfb_pos = 0.05 -- % of screen width in from left side
-	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 20,
-										screenW * (1-pfb_pos) * 2, 15,
-										0, 0,
-										EntityTypes.FUEL, "horizontal")
+	player_fuel_bar = ProgressBar.new(screenW * pfb_pos, 20, screenW * (1-pfb_pos) * 2, 15, 
+										0, 0, EntityTypes.FUEL, "horizontal")
 	
 	drop_points = {}
 	fuel_stations = {}
@@ -78,44 +80,34 @@ end
 function love.draw()
 	-- set draw target to canvas
 	love.graphics.setCanvas(canvas)
+	-- set background colour
 	love.graphics.clear(0.15, 0.05, 0.15, 1)
-
 	-- apply screen transform
 	love.graphics.push()
 	love.graphics.applyTransform(SCREEN_TRANSFORM)
 
 	-- draw to canvas
-	player:draw()
 	drawStations()
+	player:draw()
+	for layer = 1, #BATCH.quads_by_layer do
+		BATCH:draw_layer(layer)
+		-- love.graphics.setColor(1,1,1,0.5)
+		BATCH2:draw_layer(layer)
+		love.graphics.setColor(1,1,1,1)
+	end
 	
 	-- stop applying screen transform
 	love.graphics.pop()
-
 	-- draw UI outside of screen transform
-	player_fuel_bar:draw(player.fuel / player.fuelMax)
-	drawStats()
-	-- love.graphics.setShader()
-
-	-- set draw target to screen
-	love.graphics.setCanvas()
-	
-	-- for k, v in pairs(shader_vars) do shader_crt:send(k, v) end
-
+	drawUI()
 	-- set new canvas for glow shader
 	love.graphics.setCanvas(canvas2)
-
 	-- apply crt shader and draw canvas to glow shader canvas
-	love.graphics.setShader(shader_crt)
-	love.graphics.draw(canvas)
-	love.graphics.setShader()
-
+	drawCanvasWithShader(canvas, shader_crt)
+	-- set draw target to screen
 	love.graphics.setCanvas()
-	
 	-- apply glow shader
-	love.graphics.setShader(shader_glow)
-	love.graphics.draw(canvas2)
-	love.graphics.setShader()
-
+	drawCanvasWithShader(canvas2, shader_glow)
 	-- draw game over screen
 	if GAMEOVER then drawEndScreen(game_over_sprite) end
 	
@@ -128,10 +120,10 @@ function love.update(dt)
 	
 	TIME = TIME + dt
 	-- shader_vars.time = math.abs(math.mod(TIME, 2) - 1)
-	if TIME > 0.1 then
-		if not player_grow_first then
+	if TIME > 0.15 then
+		if player_grow_first then
 			player:grow(1)
-			player_grow_first = true
+			player_grow_first = false
 		end
 	end
 
@@ -218,14 +210,12 @@ function love.keypressed(key, scancode, isrepeat)
 	if love.keyboard.isDown("p") then
 		PAUSE = not PAUSE
 	end
-		
-	-- if key == "s" then
-	-- 	player:grow(1)
-	-- end
 end
 
-function love.mousepressed(x, y, button, istouch, presses)
-
+function drawCanvasWithShader(canvas, shader)
+	love.graphics.setShader(shader)
+	love.graphics.draw(canvas)
+	love.graphics.setShader()
 end
 
 function updateTransform(scale)
@@ -237,15 +227,6 @@ end
 function endGame()
 	PAUSE = true
 	GAMEOVER = true
-end
-
-
-function printCells()
-	text = ""
-	for n, cell in pairs(player.segments) do
-		text = text.."("..n.." "..cell.type..")"
-	end
-	return text
 end
 
 function drawStations()
@@ -260,11 +241,21 @@ function drawStations()
 		do sy:draw() drawBBox("circle", sy:getDepositBBox("circle"), sy.colour) end
 end
 
-function drawStats()
+function drawUI()
+	player_fuel_bar:draw(player.fuel / player.fuelMax)
 	love.graphics.draw(score_sprite, score_text_x, score_text_y)
 	love.graphics.print(SCORE, score_text_x + credits_sprite:getWidth() + 20, score_text_y, 0, 1.5)
 	love.graphics.draw(credits_sprite, credits_text_x, credits_text_y)
 	love.graphics.print("¢ "..CREDITS, credits_text_x + credits_sprite:getWidth() + 20, credits_text_y, 0, 1.5)
+	
+	head = player.segments[1].sprite_stack
+	love.graphics.print(string.format("%.2f", player.x).." / "..string.format("%.2f", player.y), 70, 100, 0, 1.5)
+	love.graphics.print(string.format("%.2f", head.perspective_x).." / "..string.format("%.2f", head.perspective_y), 70, 120, 0, 1.5)
+	love.graphics.print(string.format("%.2f", head.x_scale).." / "..string.format("%.2f", head.y_scale), 70, 140, 0, 1.5)
+	love.graphics.print(string.format("%.2f", head.rotation), 70, 160, 0, 1.5)
+	love.graphics.print(string.format("%.2f", (math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 120, 160, 0, 1.5)
+	love.graphics.print(string.format("%.2f", (-math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 170, 160, 0, 1.5)
+
 end
 
 function loadStations()
