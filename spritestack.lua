@@ -108,9 +108,11 @@ function SpriteStack:add_to_batch()
 	for q, quad in pairs(self.quads) do
 		self.x_scale = (math.cos(self.rotation * 2) / 2 + 0.5) * 0.2 + 0.8
 		self.y_scale = (-math.cos(self.rotation * 2) / 2 + 0.5) * 0.2 + 0.8
-		local x_scale, y_scale = self.x_scale, self.y_scale
-		self.spriteBatch:add(q, quad, self.x - (q - 1) * self.x_spacing * (self.perspective_x), 
-									self.y - (q - 1) * self.y_spacing * (self.perspective_y), 
+		local sign_x = (-self.x) / math.abs(self.x)
+		local sign_y = (-self.y) / math.abs(self.y)
+		local x_scale, y_scale = (self.perspective_x), (self.perspective_y) --self.x_scale, self.y_scale
+		self.spriteBatch:add(q, quad, self.x - (q - 1) * self.x_spacing * sign_x * (1 / self.perspective_x), 
+									self.y - (q - 1) * self.y_spacing * sign_y * (1 / self.perspective_y), 
 									self.rotation, x_scale, y_scale, self.width / 2, self.height / 2)
 	end
 	if not self.shared then love.graphics.draw(self.spriteBatch) end

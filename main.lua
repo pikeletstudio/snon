@@ -249,12 +249,12 @@ function drawUI()
 	love.graphics.print("¢ "..CREDITS, credits_text_x + credits_sprite:getWidth() + 20, credits_text_y, 0, 1.5)
 	
 	head = player.segments[1].sprite_stack
-	love.graphics.print(string.format("%.2f", player.x).." / "..string.format("%.2f", player.y), 70, 100, 0, 1.5)
-	love.graphics.print(string.format("%.2f", head.perspective_x).." / "..string.format("%.2f", head.perspective_y), 70, 120, 0, 1.5)
-	love.graphics.print(string.format("%.2f", head.x_scale).." / "..string.format("%.2f", head.y_scale), 70, 140, 0, 1.5)
-	love.graphics.print(string.format("%.2f", head.rotation), 70, 160, 0, 1.5)
-	love.graphics.print(string.format("%.2f", (math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 120, 160, 0, 1.5)
-	love.graphics.print(string.format("%.2f", (-math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 170, 160, 0, 1.5)
+	love.graphics.print(string.format("position     %.2f", player.x).." / "..string.format("%.2f", player.y), 70, 100, 0, 1.5)
+	love.graphics.print(string.format("perspective  %.2f", head.perspective_x).." / "..string.format("%.2f", head.perspective_y), 70, 120, 0, 1.5)
+	love.graphics.print(string.format("scale        %.2f", head.x_scale).." / "..string.format("%.2f", head.y_scale), 70, 140, 0, 1.5)
+	love.graphics.print(string.format("rotation     %.2f", head.rotation), 70, 160, 0, 1.5)
+	-- love.graphics.print(string.format("%.2f", (math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 120, 160, 0, 1.5)
+	-- love.graphics.print(string.format("%.2f", (-math.cos(head.rotation * 2) / 2 + 0.5) * 0.2 + 0.8), 170, 160, 0, 1.5)
 
 end
 

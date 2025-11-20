@@ -344,7 +344,17 @@ function Segment:update(x, y, rot)
 	self.rot = rot
 	screenW = love.graphics.getWidth() / 2
 	screenH = love.graphics.getHeight() / 2
-	self.sprite_stack:set_perspective(-self.x / screenW * 6, -self.y / screenH * 6)
+	px = 1 / ((self.x) / math.abs(self.x) * ((self.x  / screenW)^2 + 1) + (self.x == 0 and 1 or 0) )
+	py = 1 / ((self.y) / math.abs(self.y) * ((self.y  / screenH)^2 + 1) + (self.y == 0 and 1 or 0) )
+	
+	px = 1 - math.abs( math.sin( math.atan( self.x / screenW) ) )
+	py = 1 - math.abs( math.sin( math.atan( self.y / screenH) ) )
+
+	if px ~= px then px = 1 end
+	if py ~= py then py = 1 end
+	print(py)
+	self.sprite_stack:set_perspective(px, py)
+	-- self.sprite_stack:set_perspective(-self.x / screenW * 6, -self.y / screenH * 6)
 end
 
 function Segment:clearPath(keep)
